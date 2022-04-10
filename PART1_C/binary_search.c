@@ -7,9 +7,9 @@ typedef struct measurements{
 }measurements;
 
 typedef struct date{
-    int year;
     int month;
     int day;
+    int year;
 }date;
 
 void printMeasurments(measurements values[])
@@ -27,34 +27,44 @@ int compare_dates (measurements m1, measurements m2)
     char date2_s[20];
     strcpy(date1_s, m1.date);
     strcpy(date2_s, m2.date);
-    date date1;
+    date date1; //make 2 date structs
     date date2;
-    int counter = 0;
-    char *temp1 = strtok(date1_s, "/");
-    char *temp2 = strtok(date1_s, "/");
+    char *temp1 = strtok(date1_s, "/"); //seperate month/day/year with strtok()
     for(int i = 0; i<3; i++)
     {
-        if(counter == 0)
-        {
-            date1.day = atoi(temp1);
-            date2.day = atoi(temp2);
-        }
-        if(counter == 1)
+        if(i == 0)
         {
             date1.month = atoi(temp1);
-            date2.month = atoi(temp2);
         }
-        if(counter == 2)
+        if(i == 1)
+        {
+            date1.day = atoi(temp1);
+        }
+        if(i == 2)
         {
             date1.year = atoi(temp1);
+        }
+        temp1 = strtok(NULL, "/");
+    }
+    //I need 2 different loops for each date because strtok() doesnt work with two strings at the same time
+    char *temp2 = strtok(date2_s, "/");
+    for(int i = 0; i<3; i++)
+    {
+        if(i == 0)
+        {
+           date2.month = atoi(temp2);
+        }
+        if(i == 1)
+        {
+            date2.day = atoi(temp2);
+        }
+        if(i == 2)
+        {
             date2.year = atoi(temp2);
         }
-        counter++;
-        temp1 = strtok(NULL, "/");
         temp2 = strtok(NULL, "/");
-
-
     }
+    //comparison between the two date structs first by year then by month then by day
     if (date1.year < date2.year)
        return -1;
 
@@ -134,11 +144,21 @@ int main()
 
     }
     fclose(file);
+    int x = 40;
+    int y = 50;
+    //now I have an array of structs that contain the dates and temps from to ocean.csv
+    int result =  compare_dates(values[x], values[y]);
+    switch(result)
+    {
+        case -1: printf("%s comes earlier than %s", values[x].date, values[y].date);
+                 break;
+        case 1: printf("%s comes later than %s", values[x].date, values[y].date);
+                break;
+        case 0: printf("%s is the same as %s", values[x].date, values[y].date);
+                break;
+    }
 
-    //exw enan pinaka me structs pou periexoun ta dates kai temps apo to ocean.csv
-
-
-    printMeasurments(values);
+    //printMeasurments(values);
     return 0;
 }
 
