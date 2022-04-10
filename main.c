@@ -20,7 +20,7 @@ void printMeasurments(measurements values[])
     }
 }
 
-//if m1.date>m2.date it returns 1 if m1.date<m2.date -1 and if equal it returns 0
+//if m1.date>m2.date it returns 1 if m1.date<m2.date -1 and if its equal it returns 0
 int compare_dates (measurements m1, measurements m2)
 {
     char date1_s[20];
