@@ -12,7 +12,7 @@ typedef struct date{
     int year;
 }date;
 
-void printMeasurments(measurements values[])
+void print_measurments(measurements values[])
 {
     for(int i=0; i<1405; i++)
     {
@@ -86,25 +86,26 @@ int compare_dates(char date1_s[], char date2_s[])
     }
 }
 
-/*int binarySearch(measurements arr[], char l[], char r[], char x[])//x is the date I am looking for
+int binary_search(measurements arr[], int l, int r, char x[])//x is the date I am looking for
 {
-    if() {return -1;}
+    if(l>r) {return -1;}
 
     int mid = (l + r) / 2;
+    int result = compare_dates(arr[mid].date, x);
 
-    if(arr[mid] == x)
+    if(result == 0) //if the dates are equal
     {
         return mid;
     }
-    else if(arr[mid] < x)
+    else if(result == -1)
     {
-        return binarySearch(arr,mid + 1, r, x);
+        return binary_search(arr,mid + 1, r, x);
     }
-    else if(arr[mid] > x)
+    else if(result == 1)
     {
-        return binarySearch(arr, l, mid -1, x);
+        return binary_search(arr, l, mid -1, x);
     }
-}*/
+}
 
 int main()
 {
@@ -146,21 +147,33 @@ int main()
 
     }
     fclose(file);
-    int x = 40;
-    int y = 50;
     //now I have an array of structs that contain the dates and temps from to ocean.csv
-    int result =  compare_dates(values[x].date, values[y].date);
-    switch(result)
+    printf("Enter a date(mm/dd/yy): ");
+    char date[20];
+    scanf("%s", date);
+    int index = binary_search(values, 0, 1404, date);
+    if(index==-1)
     {
-        case -1: printf("%s comes earlier than %s", values[x].date, values[y].date);
-                 break;
-        case 1: printf("%s comes later than %s", values[x].date, values[y].date);
+        printf("Invalid date");
+        return -1;
+    }
+    printf("Do you want to access the temperature or phosphate reading?\n");
+    printf("Temperature: 1\n");
+    printf("Phosphate: 2\n");
+    printf("Both: 3\n");
+    printf("Enter your choice: ");
+    int choice;
+    scanf("%d", &choice);
+    switch(choice)
+    {
+        case 1: printf("The temperature on %s was %s", date, values[index].temp);
                 break;
-        case 0: printf("%s is the same as %s", values[x].date, values[y].date);
+        case 2: printf("The phosphate reading on %s was %s", date, values[index].phosphate);
+                break;
+        case 3: printf("The temperature on %s was %s C and the phosphate reading was %s", date, values[index].temp, values[index].phosphate);
                 break;
     }
 
-    //-printMeasurments(values);
     return 0;
 }
 
