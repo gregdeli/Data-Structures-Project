@@ -151,7 +151,8 @@ int main()
     printf("Enter a date(mm/dd/yy): ");
     char date[20];
     scanf("%s", date);
-    int index = binary_search(values, 0, 1404, date);
+    int size = sizeof(values)/sizeof(measurements);
+    int index = binary_search(values, 0, size-1, date);
     if(index==-1)
     {
         printf("Invalid date");
