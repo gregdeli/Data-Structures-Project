@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
+#include <stdlib.h>
 
 typedef struct measurements{
     char date[20],temp[6], phosphate[6];
@@ -110,7 +112,7 @@ int binary_search(measurements arr[], int l, int r, char x[])//x is the date I a
 int main()
 {
     //Initialization of the file pointer
-   FILE *file = fopen("ocean.csv", "r");
+   FILE *file = fopen("ocean_sorted_dates.csv", "r");
     if(!file)
     {
       printf("Error");
@@ -148,32 +150,83 @@ int main()
     }
     fclose(file);
     //now I have an array of structs that contain the dates and temps from to ocean.csv
-    printf("Enter a date(mm/dd/yy): ");
     char date[20];
-    scanf("%s", date);
-    int size = sizeof(values)/sizeof(measurements);
-    int index = binary_search(values, 0, size-1, date);
-    if(index==-1)
+    int index;
+    bool invalid_date;
+    do
     {
-        printf("Invalid date");
-        return -1;
+        invalid_date = false;
+        printf("Enter a date(mm/dd/yy): ");
+        scanf("%s", date);
+        int size = sizeof(values)/sizeof(measurements);
+        index = binary_search(values, 0, size-1, date);
+        if(index==-1)
+        {
+            invalid_date = true;
+            int choice = 0;
+            printf("Invalid date!\n\n");
+            printf("Continue: 1\n");
+            printf("Exit: 2\n");
+            printf("Enter your choice: ");
+            scanf("%d", &choice);
+            while ((getchar()) != '\n'); //reads input buffer until the end and discards them including newline
+            if((choice != 1)&(choice != 2))
+            {
+                system("cls");
+                continue;
+            }
+            switch(choice)
+            {
+                case 1:
+                    system("cls"); //works only on windows
+                    break;
+                case 2:
+                    return 0;
+
+            }
+        }
     }
-    printf("Do you want to access the temperature or phosphate reading?\n");
-    printf("Temperature: 1\n");
-    printf("Phosphate: 2\n");
-    printf("Both: 3\n");
-    printf("Enter your choice: ");
-    int choice;
-    scanf("%d", &choice);
-    switch(choice)
+    while(invalid_date);
+    bool loop = true;
+    do
     {
-        case 1: printf("The temperature on %s was %s", date, values[index].temp);
+        int choice = 0;
+        printf("Do you want to access the temperature or phosphate reading?\n");
+        printf("Temperature: 1\n");
+        printf("Phosphate: 2\n");
+        printf("Both: 3\n");
+        printf("Exit: 4\n");
+        printf("Enter your choice: ");
+        scanf(" %d", &choice);
+        while ((getchar()) != '\n');
+        if((choice != 1) & (choice != 2) & (choice != 3) & (choice != 4))
+        {
+            system("cls");
+            continue;
+        }
+        switch(choice)
+        {
+            case 1:
+                printf("The temperature on %s was %s\n", date, values[index].temp);
                 break;
-        case 2: printf("The phosphate reading on %s was %s", date, values[index].phosphate);
+            case 2:
+                printf("The phosphate reading on %s was %s\n", date, values[index].phosphate);
                 break;
-        case 3: printf("The temperature on %s was %s C and the phosphate reading was %s", date, values[index].temp, values[index].phosphate);
+            case 3:
+                printf("The temperature on %s was %s C and the phosphate reading was %s\n", date, values[index].temp, values[index].phosphate);
                 break;
+            case 4:
+                printf("Exiting...");
+                loop = false;
+        }
+        if(loop)
+        {
+            printf("Press any key to continue ");
+            getch();
+            system("cls"); //works only on windows
+        }
     }
+    while(loop);
 
     return 0;
 }

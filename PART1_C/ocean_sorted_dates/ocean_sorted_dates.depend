@@ -1,6 +1,0 @@
-# depslib dependency file v1.0
-1649711774 source:c:\users\greg\documents\github\data_structures_project\part1_c\ocean_sorted_dates\main.c
-	<stdio.h>
-	<string.h>
-	<stdlib.h>
-
