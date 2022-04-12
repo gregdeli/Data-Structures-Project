@@ -191,7 +191,14 @@ int main()
         printf("Exit: 4\n");
         printf("Enter your choice: ");
         int choice;
-        scanf("%d", &choice);
+        bool valid_input = true;
+        valid_input = scanf(" %d", &choice);
+        if(!valid_input)
+        {
+            while ((getchar()) != '\n');
+            system("cls"); //works only on windows
+            continue;
+        }
         switch(choice)
         {
             case 1:
