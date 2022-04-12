@@ -83,24 +83,11 @@ int main()
 
     }
 
-   // printMeasurments(string_values);
-  //printMeasurments2(float_values);       //functions in order to print the string data struct or the float_string data struct.
+   Insertion_Sort2(float_values);
+    //printMeasurments(string_values);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  printMeasurments2(float_values);       //functions in order to print the string data struct or the float_string data struct.
     return 0;
 }
 
@@ -118,9 +105,47 @@ void printMeasurments2(float_measurements float_values[])
 {
     for(int i=0; i<1405; i++)
     {
+
        printf("%s %.2f %.2f %.2f ",float_values[i].date2,float_values[i].temp2,float_values[i].phosphate2,float_values[i].silicate2);
-       printf("%.2f %.2f %.2f %.2f \n",float_values[i].nitrite2,float_values[i].nitrate2,float_values[i].salinity2,float_values[i].oxygen2);
+       printf("%.2f %.2f %.2f %.2f  i=%d\n",float_values[i].nitrite2,float_values[i].nitrate2,float_values[i].salinity2,float_values[i].oxygen2,i);
+       //printf("%.2f\n",float_values[i].temp2);
+    }
+}
+void Insertion_Sort2(float_measurements float_values[]){
+for(int i=0; i<1404; i++)
+    {
+
+       if(float_values[i+1].temp2<float_values[i].temp2) //if the next element is smaller than the previous go inside the if
+       {
+
+           for(int y=0; y<i+1; y++)       //now we need to see where we need to put the i+1 element
+           {
+
+               if(float_values[i+1].temp2<float_values[y].temp2) //if the i+1 element is smaller than y element then we have to insert it to y location
+               {                                                 //we start for y=0 cause we want to start from the element 0 and find --
+                                                                 //-- the first element that is bigger than the i+1 in order to insert it there.
+                   float_measurements g1=float_values[i+1];
+                   float g=float_values[i+1].temp2;               //we set  the whole i+1 struct as a temp struct called g1
+                                                                  //we also set the i+1 temperature as a temp vallue called g
+
+                   for(int z=i; z>=0; z--)
+                    {
+                        if(float_values[z].temp2<g)                //we use a break in order to stop moving our elements 1 location further ---
+                            break;                                 //---- We need to stop cause we want to move 1 location further only the part of the array ---
+                                                                   //--- is bigger than the i+1 element
+
+
+                    float_values[z+1]=float_values[z];               //we need to move the bigger elements 1 location further
+
+
+                    }
+                   float_values[y]=g1;                               //we insert our i+1 element to the y location
+
+               }
+
+           }
+
+       }
 
     }
 }
-
