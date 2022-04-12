@@ -17,7 +17,7 @@ typedef struct date{
 
 void print_measurments(measurements values[])
 {
-    for(int i=0; i<1405; i++)
+    for(int i=0; i<sizeof(values)/sizeof(measurements); i++)
     {
         printf("%s %s %s %s ",values[i].date,values[i].temp,values[i].phosphate,values[i].silicate);
         printf("%s %s %s %s \n",values[i].nitrite,values[i].nitrate,values[i].salinity,values[i].oxygen);
@@ -125,6 +125,7 @@ int main()
     int field_count =0;
 
     measurements values[1405];
+    int size_of_values = sizeof(values)/sizeof(measurements);
     int i=0;
 
     while(fgets(buff1,sizeof(buff1),file))
@@ -162,10 +163,24 @@ int main()
     }
     fclose(file);
 
-    int size_of_values = sizeof(values)/sizeof(measurements);
     bubble_sort(values, size_of_values);
-    print_measurments(values);
+    //print_measurments(values);
+
     //write the sorted values by date onto a new file ocean_sorted_by_dates.csv
+    file = fopen("ocean_sorted_dates.csv" ,"w");
+    if(file==NULL)
+    {
+        printf("Error");
+        return 0;
+    }
+    //write the sorted by date data on a new file
+    fprintf(file, "Date,T_degC,PO4uM,SiO3uM,NO2uM,NO3uM,Salnty,O2ml_L\n");
+    for(int i=0; i<size_of_values; i++)
+    {
+        fprintf(file, "%s,%s,%s,%s,%s,%s,%s,%s", values[i].date, values[i].temp, values[i].phosphate, values[i].silicate, values[i].nitrite, values[i].nitrate, values[i].salinity, values[i].oxygen);
+    }
+    fclose(file);
+
     return 0;
 }
 
