@@ -163,12 +163,18 @@ int main()
         if(index==-1)
         {
             invalid_date = true;
-            int choice;
+            int choice = 0;
             printf("Invalid date!\n\n");
             printf("Continue: 1\n");
             printf("Exit: 2\n");
             printf("Enter your choice: ");
             scanf("%d", &choice);
+            while ((getchar()) != '\n'); //reads input buffer until the end and discards them including newline
+            if((choice != 1)&(choice != 2))
+            {
+                system("cls");
+                continue;
+            }
             switch(choice)
             {
                 case 1:
@@ -184,19 +190,18 @@ int main()
     bool loop = true;
     do
     {
+        int choice = 0;
         printf("Do you want to access the temperature or phosphate reading?\n");
         printf("Temperature: 1\n");
         printf("Phosphate: 2\n");
         printf("Both: 3\n");
         printf("Exit: 4\n");
         printf("Enter your choice: ");
-        int choice;
-        bool valid_input = true;
-        valid_input = scanf(" %d", &choice);
-        if(!valid_input)
+        scanf(" %d", &choice);
+        while ((getchar()) != '\n');
+        if((choice != 1) & (choice != 2) & (choice != 3) & (choice != 4))
         {
-            while ((getchar()) != '\n');
-            system("cls"); //works only on windows
+            system("cls");
             continue;
         }
         switch(choice)
