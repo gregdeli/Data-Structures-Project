@@ -169,7 +169,7 @@ int main()
     //write the sorted values by date onto a new file ocean_sorted_by_dates.csv
     file = fopen("ocean_sorted_dates.csv" ,"w");
     if(file==NULL)
-    {
+    {s
         printf("Error");
         return 0;
     }
