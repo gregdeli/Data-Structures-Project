@@ -15,23 +15,11 @@ typedef struct date{
     int year;
 }date;
 
-void print_measurments(measurements values[])
-{
-    for(int i=0; i<1405; i++)
-    {
-        printf("%s \t%s\t%s\n",values[i].date, values[i].temp, values[i].phosphate);
-    }
-}
-
-//if m1.date>m2.date it returns 1 if m1.date<m2.date -1 and if its equal it returns 0
-int compare_dates(char date1_s[], char date2_s[])
+date dateString_to_dateStruct(char date1_s[])
 {
     date date1; //make 2 date structs
-    date date2;
     char temp_date1[20]; //cant use strtok() on the original date string because it will change it
-    char temp_date2[20];
     strcpy(temp_date1,date1_s);
-    strcpy(temp_date2,date2_s);
     char *temp1 = strtok(temp_date1, "/"); //seperate month/day/year with strtok()
     for(int i = 0; i<3; i++)
     {
@@ -49,24 +37,24 @@ int compare_dates(char date1_s[], char date2_s[])
         }
         temp1 = strtok(NULL, "/");
     }
-    //I need 2 different loops for each date because strtok() doesnt work with two strings at the same time
-    char *temp2 = strtok(temp_date2, "/");
-    for(int i = 0; i<3; i++)
+    return date1;
+}
+
+void print_measurments(measurements values[])
+{
+    for(int i=0; i<1405; i++)
     {
-        if(i == 0)
-        {
-           date2.month = atoi(temp2);
-        }
-        if(i == 1)
-        {
-            date2.day = atoi(temp2);
-        }
-        if(i == 2)
-        {
-            date2.year = atoi(temp2);
-        }
-        temp2 = strtok(NULL, "/");
+        printf("%s \t%s\t%s\n",values[i].date, values[i].temp, values[i].phosphate);
     }
+}
+
+//if m1.date>m2.date it returns 1 if m1.date<m2.date -1 and if its equal it returns 0
+int compare_dates(char date1_s[], char date2_s[])
+{
+    date date1; //make 2 date structs
+    date date2;
+    date1 = dateString_to_dateStruct(date1_s);
+    date2 = dateString_to_dateStruct(date2_s);
     //comparison between the two date structs first by year then by month then by day
     if (date1.year < date2.year)
        return -1;
@@ -89,25 +77,64 @@ int compare_dates(char date1_s[], char date2_s[])
     }
 }
 
-int binary_search(measurements arr[], int l, int r, char x[])//x is the date I am looking for
+int subtract_dates(char date1_s[], char date2_s[])
 {
-    if(l>r) {return -1;}
+    date date1; //make 2 date structs
+    date date2;
+    date1 = dateString_to_dateStruct(date1_s);
+    date2 = dateString_to_dateStruct(date2_s);
+    //to subtract dates for interpolation first check the years if they are different subtract them and take the absolute value and multiply by 1000 then do the same for the months and mul by 100 and then the same for the days and mul by 10. Lastly add every result and you get an indication of the distance between the dates
+    int result1 = 0;
+    if(date1.year!=date2.year)
+    {
+        result1 = abs(date1.year - date2.year) * 1000;
+    }
+    int result2 = 0;
+    if(date1.month!=date2.month)
+    {
+        result2 = abs(date1.month - date2.month) * 100;
+    }
+    int result3 = 0;
+    if(date1.day!=date2.day)
+    {
+        result3 = abs(date1.day - date2.day) * 100;
+    }
 
-    int mid = (l + r) / 2;
-    int result = compare_dates(arr[mid].date, x);
+    int result = result1 + result2 + result3;
+    return result;
+}
 
-    if(result == 0) //if the dates are equal
-    {
-        return mid;
+int interpolationSearch(measurements arr[], int lo, int hi, char x[])
+{
+    int pos;
+    // Since array is sorted, an element present
+    // in array must be in range defined by corner
+    bool x_grtr_eq_to_arrlo = false; //date x is grater than or equal to arr[lo].date
+    bool x_smlr_eq_to_arrhi = false; //date x is smaller than or equal to arr[hi].date
+    int y = compare_dates(x, arr[lo].date);
+    int y1 = compare_dates(x, arr[hi].date);
+    if(y==1 || y==0) x_grtr_eq_to_arrlo = true;
+    if(y1==-1 || y1==0) x_smlr_eq_to_arrhi = true;
+    if (lo <= hi && x_grtr_eq_to_arrlo && x_smlr_eq_to_arrhi) {
+        // Probing the position with keeping
+        // uniform distribution in mind.
+        int sub1 = subtract_dates(x ,arr[lo].date);
+        int sub2 = subtract_dates(arr[hi].date ,arr[lo].date);
+        pos = lo + (((double)(hi - lo) / (sub2) * (sub1)));
+
+        // Condition of target found
+        if (compare_dates(arr[pos].date, x) == 0) //arr[pos].date == x
+            return pos;
+
+        // If x is larger, x is in right sub array
+        if (compare_dates(arr[pos].date, x) == -1)  //arr[pos].date < x
+            return interpolationSearch(arr, pos + 1, hi, x);
+
+        // If x is smaller, x is in left sub array
+        if (compare_dates(arr[pos].date, x) == 1)  //arr[pos].date > x
+            return interpolationSearch(arr, lo, pos - 1, x);
     }
-    else if(result == -1)
-    {
-        return binary_search(arr,mid + 1, r, x);
-    }
-    else if(result == 1)
-    {
-        return binary_search(arr, l, mid -1, x);
-    }
+    return -1;
 }
 
 int main()
@@ -161,7 +188,7 @@ int main()
         scanf("%s", date);
         int size = sizeof(values)/sizeof(measurements);
         int start = clock();
-        index = binary_search(values, 0, size-1, date);
+        index = interpolationSearch(values, 0, size-1, date);
         int end = clock();
         int time = end-start;
         printf("It took %d ticks to run the algorithm\n", time);
@@ -235,5 +262,3 @@ int main()
 
     return 0;
 }
-
-
