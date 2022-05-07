@@ -187,11 +187,11 @@ int main()
         printf("Enter a date(mm/dd/yy): ");
         scanf("%s", date);
         int size = sizeof(values)/sizeof(measurements);
-        int start = clock();
+        clock_t start = clock();
         index = interpolationSearch(values, 0, size-1, date);
-        int end = clock();
-        int time = end-start;
-        printf("It took %d ticks to run the algorithm\n", time);
+        clock_t end = clock();
+        double time = (double) (end-start) / CLOCKS_PER_SEC;
+        printf("It took %f secs to run the algorithm\n", time);
         if(index==-1)
         {
             invalid_date = true;

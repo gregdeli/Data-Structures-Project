@@ -165,7 +165,7 @@ int main()
         start = clock();
         index = binary_search(values, 0, size-1, date);
         end = clock();
-        double time = (double)(end - start) / CLOCKS_PER_SEC;
+        double time = (double)(end - start)/CLOCKS_PER_SEC;
         printf("It took %f secs to run the algorithm\n", time);
         if(index==-1)
         {
