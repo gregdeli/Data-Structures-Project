@@ -254,7 +254,7 @@ int main()
         if(loop)
         {
             printf("Press any key to continue ");
-            //getch();
+            getch();
             system("cls"); //works only on windows
         }
     }

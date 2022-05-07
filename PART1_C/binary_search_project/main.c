@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+
 typedef struct measurements{
     char date[20],temp[6], phosphate[6];
 
@@ -160,11 +161,12 @@ int main()
         printf("Enter a date(mm/dd/yy): ");
         scanf("%s", date);
         int size = sizeof(values)/sizeof(measurements);
-        int start = clock();
+        clock_t start, end;
+        start = clock();
         index = binary_search(values, 0, size-1, date);
-        int end = clock();
-        int time = end-start;
-        printf("It took %d ticks to run the algorithm\n", time);
+        end = clock();
+        double time = (double)(end - start) / CLOCKS_PER_SEC;
+        printf("It took %f secs to run the algorithm\n", time);
         if(index==-1)
         {
             invalid_date = true;
@@ -227,7 +229,7 @@ int main()
         if(loop)
         {
             printf("Press any key to continue ");
-            //getch();
+            getch();
             system("cls"); //works only on windows
         }
     }
