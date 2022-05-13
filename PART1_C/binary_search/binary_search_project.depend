@@ -3,7 +3,7 @@
 	<stdio.h>
 	<string.h>
 
-1651933512 source:c:\users\greg\documents\github\data_structures_project\part1_c\binary_search_project\main.c
+1651941712 source:c:\users\greg\documents\github\data_structures_project\part1_c\binary_search_project\main.c
 	<stdio.h>
 	<string.h>
 	<stdbool.h>
@@ -11,6 +11,13 @@
 	<time.h>
 
 1651934345 source:/home/greg/Desktop/GitHub/data_structures_project/PART1_C/binary_search_project/main.c
+	<stdio.h>
+	<string.h>
+	<stdbool.h>
+	<stdlib.h>
+	<time.h>
+
+1651941712 source:c:\users\greg\documents\github\data_structures_project\part1_c\binary_search\main.c
 	<stdio.h>
 	<string.h>
 	<stdbool.h>

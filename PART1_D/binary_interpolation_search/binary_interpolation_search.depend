@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1652469474 source:c:\users\greg\documents\github\data_structures_project\part1_d\binary_interpolation_search\main.c
+	<stdio.h>
+	<string.h>
+	<stdbool.h>
+	<stdlib.h>
+	<time.h>
+

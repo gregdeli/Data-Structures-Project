@@ -104,38 +104,6 @@ int subtract_dates(char date1_s[], char date2_s[])
     return result;
 }
 
-int interpolationSearch(measurements arr[], int lo, int hi, char x[])
-{
-    int pos;
-    // Since array is sorted, an element present
-    // in array must be in range defined by corner
-    bool x_grtr_eq_to_arrlo = false; //date x is grater than or equal to arr[lo].date
-    bool x_smlr_eq_to_arrhi = false; //date x is smaller than or equal to arr[hi].date
-    int y = compare_dates(x, arr[lo].date);
-    int y1 = compare_dates(x, arr[hi].date);
-    if(y==1 || y==0) x_grtr_eq_to_arrlo = true;
-    if(y1==-1 || y1==0) x_smlr_eq_to_arrhi = true;
-    if (lo <= hi && x_grtr_eq_to_arrlo && x_smlr_eq_to_arrhi) {
-        // Probing the position with keeping
-        // uniform distribution in mind.
-        int sub1 = subtract_dates(x ,arr[lo].date);
-        int sub2 = subtract_dates(arr[hi].date ,arr[lo].date);
-        pos = lo + (((double)(hi - lo) / (sub2) * (sub1)));
-
-        // Condition of target found
-        if (compare_dates(arr[pos].date, x) == 0) //arr[pos].date == x
-            return pos;
-
-        // If x is larger, x is in right sub array
-        if (compare_dates(arr[pos].date, x) == -1)  //arr[pos].date < x
-            return interpolationSearch(arr, pos + 1, hi, x);
-
-        // If x is smaller, x is in left sub array
-        if (compare_dates(arr[pos].date, x) == 1)  //arr[pos].date > x
-            return interpolationSearch(arr, lo, pos - 1, x);
-    }
-    return -1;
-}
 
 int main()
 {
