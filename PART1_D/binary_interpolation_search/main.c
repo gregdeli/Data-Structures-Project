@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 typedef struct measurements{
     char date[20],temp[6], phosphate[6];
@@ -104,6 +105,57 @@ int subtract_dates(char date1_s[], char date2_s[])
     return result;
 }
 
+int binary_interpolation_search(measurements arr[], int left, int right, char x[])
+{
+    int result = -2;
+    int size = right-left+1;
+    int sub1 = subtract_dates(x ,arr[left].date);
+    int sub2 = subtract_dates(arr[right].date ,arr[left].date);
+    int next =(size * sub1 / sub2) + 1;
+    result = compare_dates(x, arr[next].date);
+    while(result==1 || result==-1)
+    {
+        int i = 0;
+        if(result == 1 || result == 0) //if x >= arr[next].date
+        {
+            int pos = next+i*sqrt(size)-1;
+            int res = compare_dates(x, arr[pos].date);
+            while(res == 1) //while x>arr[pos].date
+            {
+                i++;
+                pos = next+i*sqrt(size)-1;
+                res = compare_dates(x, arr[pos].date);
+            }
+            right = next + i*sqrt(size);
+            left = next + (i-1)*sqrt(size);
+        }
+        if(result == -1)
+        {
+            int pos = next-i*sqrt(size)+1;
+            int res = compare_dates(x, arr[pos].date);
+            while(res == -1)
+            {
+                i++;
+                pos = next-i*sqrt(size)+1;
+                res = compare_dates(x, arr[pos].date);
+            }
+            right = next - (i-1)*sqrt(size);
+            left = next - i*sqrt(size);
+        }
+        sub1 = subtract_dates(x ,arr[left].date);
+        sub2 = subtract_dates(arr[right].date ,arr[left].date);
+        next = left + ((right-left+1) * sub1 / sub2)+1;
+        result = compare_dates(x, arr[next].date);
+
+    }
+    result = compare_dates(x, arr[next].date);
+    if(result == 0)
+        return next;
+    else
+        return -1;
+
+}
+
 
 int main()
 {
@@ -156,7 +208,7 @@ int main()
         scanf("%s", date);
         int size = sizeof(values)/sizeof(measurements);
         clock_t start = clock();
-        index = interpolationSearch(values, 0, size-1, date);
+        index = binary_interpolation_search(values, 0, size-1, date);
         clock_t end = clock();
         double time = (double) (end-start) / CLOCKS_PER_SEC;
         printf("It took %f secs to run the algorithm\n", time);

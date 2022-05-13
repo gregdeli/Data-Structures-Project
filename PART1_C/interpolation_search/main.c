@@ -104,35 +104,35 @@ int subtract_dates(char date1_s[], char date2_s[])
     return result;
 }
 
-int interpolationSearch(measurements arr[], int lo, int hi, char x[])
+int interpolationSearch(measurements arr[], int left, int right, char x[])
 {
-    int pos;
+    int next;
     // Since array is sorted, an element present
     // in array must be in range defined by corner
-    bool x_grtr_eq_to_arrlo = false; //date x is grater than or equal to arr[lo].date
-    bool x_smlr_eq_to_arrhi = false; //date x is smaller than or equal to arr[hi].date
-    int y = compare_dates(x, arr[lo].date);
-    int y1 = compare_dates(x, arr[hi].date);
-    if(y==1 || y==0) x_grtr_eq_to_arrlo = true;
-    if(y1==-1 || y1==0) x_smlr_eq_to_arrhi = true;
-    if (lo <= hi && x_grtr_eq_to_arrlo && x_smlr_eq_to_arrhi) {
+    bool x_grtr_eq_to_arrleft = false; //date x is grater than or equal to arr[lo].date
+    bool x_smlr_eq_to_arr_right = false; //date x is smaller than or equal to arr[hi].date
+    int y = compare_dates(x, arr[left].date);
+    int y1 = compare_dates(x, arr[right].date);
+    if(y==1 || y==0) x_grtr_eq_to_arrleft = true;
+    if(y1==-1 || y1==0) x_smlr_eq_to_arr_right = true;
+    if (left <= right && x_grtr_eq_to_arrleft && x_smlr_eq_to_arr_right) {
         // Probing the position with keeping
         // uniform distribution in mind.
-        int sub1 = subtract_dates(x ,arr[lo].date);
-        int sub2 = subtract_dates(arr[hi].date ,arr[lo].date);
-        pos = lo + (((double)(hi - lo) / (sub2) * (sub1)));
+        int sub1 = subtract_dates(x ,arr[left].date);
+        int sub2 = subtract_dates(arr[right].date ,arr[left].date);
+        next = left + (((double)(right - left) / (sub2) * (sub1)));
 
         // Condition of target found
-        if (compare_dates(arr[pos].date, x) == 0) //arr[pos].date == x
-            return pos;
+        if (compare_dates(arr[next].date, x) == 0) //arr[pos].date == x
+            return next;
 
         // If x is larger, x is in right sub array
-        if (compare_dates(arr[pos].date, x) == -1)  //arr[pos].date < x
-            return interpolationSearch(arr, pos + 1, hi, x);
+        if (compare_dates(arr[next].date, x) == -1)  //arr[pos].date < x
+            return interpolationSearch(arr, next + 1, right, x);
 
         // If x is smaller, x is in left sub array
-        if (compare_dates(arr[pos].date, x) == 1)  //arr[pos].date > x
-            return interpolationSearch(arr, lo, pos - 1, x);
+        if (compare_dates(arr[next].date, x) == 1)  //arr[pos].date > x
+            return interpolationSearch(arr, left, next - 1, x);
     }
     return -1;
 }
