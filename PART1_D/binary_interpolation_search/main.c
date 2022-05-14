@@ -84,29 +84,39 @@ int subtract_dates(char date1_s[], char date2_s[])
     date date2;
     date1 = dateString_to_dateStruct(date1_s);
     date2 = dateString_to_dateStruct(date2_s);
-    //to subtract dates for interpolation first check the years if they are different subtract them and take the absolute value and multiply by 1000 then do the same for the months and mul by 100 and then the same for the days and mul by 10. Lastly add every result and you get an indication of the distance between the dates
-    int result1 = 0;
-    if(date1.year!=date2.year)
+    int days = 0; //this variable counts the days between date1 and date2
+    if(date1.year==date2.year)
     {
-        result1 = abs(date1.year - date2.year) * 1000;
+        days = 31*abs(date1.month-date2.month);
+        days += abs(date1.day-date2.day);
+        return days;
     }
-    int result2 = 0;
-    if(date1.month!=date2.month)
+    else
     {
-        result2 = abs(date1.month - date2.month) * 100;
+        days = 31*(12-date2.month); // in this many days: date2 = 12/date2.day/date2.year
+        days += 31-date2.day; //in this many days: date2 = 01/01/date2.year-1 if(date1.year<date2.year) or date2 = 01/01/date2.year+1 if(date1.year>date2.year)
+        if(abs(date1.year-date2.year)==1) // if the dates' years differ by 1
+        {
+            days += 30*(date1.month-1); //date2 = date1.month/01/date1.year
+            days += date1.day-1; //date2 = date1.month/date1.day/date1.year
+            return days;
+        }
+        if(date1.year>date2.year) days += 365*abs(date1.year-date2.year+1); //date2 = 01/01/date1.year
+        else if(date1.year<date2.year) days += 365*abs(date1.year-date2.year-1); // date2 = 1/1/date1.year
+        days += 30*(date1.month-1); //date2 = date1.month/01/date1.year
+        days += date1.day-1; //date2 = date1.month/date1.day/date1.year
+        return days;
     }
-    int result3 = 0;
-    if(date1.day!=date2.day)
-    {
-        result3 = abs(date1.day - date2.day) * 10;
-    }
-
-    int result = result1 + result2 + result3;
-    return result;
 }
 
 int binary_interpolation_search(measurements arr[], int left, int right, char x[])
 {
+    int global_right = right; //to check if we input an invalid date
+    int glogal_left = left;
+    if(compare_dates(x, arr[left].date)==-1 || compare_dates(x, arr[right].date)==1) // if(x<arr[left].date) or if(x>arr[right].date)
+    {
+        return -1;
+    }
     int result = -2;
     int size = right-left+1;
     int sub1 = subtract_dates(x ,arr[left].date);
@@ -129,7 +139,7 @@ int binary_interpolation_search(measurements arr[], int left, int right, char x[
             right = next + i*sqrt(size);
             left = next + (i-1)*sqrt(size);
         }
-        if(result == -1)
+        if(result == -1) //if x < arr[next].date
         {
             int pos = next-i*sqrt(size)+1;
             int res = compare_dates(x, arr[pos].date);
@@ -146,7 +156,8 @@ int binary_interpolation_search(measurements arr[], int left, int right, char x[
         sub2 = subtract_dates(arr[right].date ,arr[left].date);
         next = left + ((right-left+1) * sub1 / sub2)+1;
         result = compare_dates(x, arr[next].date);
-
+        global_right = right;
+        glogal_left = left;
     }
     result = compare_dates(x, arr[next].date);
     if(result == 0)
@@ -206,12 +217,12 @@ int main()
         invalid_date = false;
         printf("Enter a date(mm/dd/yy): ");
         scanf("%s", date);
+        int temp = atoi(date);
         int size = sizeof(values)/sizeof(measurements);
         clock_t start = clock();
         index = binary_interpolation_search(values, 0, size-1, date);
         clock_t end = clock();
         double time = (double) (end-start) / CLOCKS_PER_SEC;
-        printf("It took %f secs to run the algorithm\n", time);
         if(index==-1)
         {
             invalid_date = true;
@@ -239,6 +250,7 @@ int main()
         }
     }
     while(invalid_date);
+    printf("It took %f secs to run the algorithm\n", time);
     bool loop = true;
     do
     {

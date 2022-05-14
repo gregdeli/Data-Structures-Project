@@ -83,25 +83,24 @@ int subtract_dates(char date1_s[], char date2_s[])
     date date2;
     date1 = dateString_to_dateStruct(date1_s);
     date2 = dateString_to_dateStruct(date2_s);
-    //to subtract dates for interpolation first check the years if they are different subtract them and take the absolute value and multiply by 1000 then do the same for the months and mul by 100 and then the same for the days and mul by 10. Lastly add every result and you get an indication of the distance between the dates
-    int result1 = 0;
-    if(date1.year!=date2.year)
+    int days = 0; //this variable counts the days between date1 and date2
+    if(date1.year==date2.year)
     {
-        result1 = abs(date1.year - date2.year) * 1000;
+        days = 31*abs(date1.month-date2.month);
+        days += abs(date1.day-date2.day);
+        return days;
     }
-    int result2 = 0;
-    if(date1.month!=date2.month)
+    else
     {
-        result2 = abs(date1.month - date2.month) * 100;
-    }
-    int result3 = 0;
-    if(date1.day!=date2.day)
-    {
-        result3 = abs(date1.day - date2.day) * 10;
+        days = 31*(12-date2.month); // in this many days: date2 = 12/date2.day/date2.year
+        days += 31-date2.day; //in this many days: date2 = 01/01/date2.year-1 if(date1.year<date2.year) or date2 = 01/01/date2.year+1 if(date1.year>date2.year)
+        if(date1.year>date2.year) days += 365*abs(date1.year-date2.year+1); //date2 = 01/01/date1.year
+        else if(date1.year<date2.year) days += 365*abs(date1.year-date2.year-1); // date2 = 1/1/date1.year
+        days += 30*(date1.month-1); //date2 = date1.month/01/date1.year
+        days += date1.day-1; //date2 = date1.month/date1.day/date1.year
+        return days;
     }
 
-    int result = result1 + result2 + result3;
-    return result;
 }
 
 int interpolationSearch(measurements arr[], int left, int right, char x[])
@@ -109,8 +108,8 @@ int interpolationSearch(measurements arr[], int left, int right, char x[])
     int next;
     // Since array is sorted, an element present
     // in array must be in range defined by corner
-    bool x_grtr_eq_to_arrleft = false; //date x is grater than or equal to arr[lo].date
-    bool x_smlr_eq_to_arr_right = false; //date x is smaller than or equal to arr[hi].date
+    bool x_grtr_eq_to_arrleft = false; //date x is grater than or equal to arr[left].date
+    bool x_smlr_eq_to_arr_right = false; //date x is smaller than or equal to arr[right].date
     int y = compare_dates(x, arr[left].date);
     int y1 = compare_dates(x, arr[right].date);
     if(y==1 || y==0) x_grtr_eq_to_arrleft = true;
@@ -120,18 +119,18 @@ int interpolationSearch(measurements arr[], int left, int right, char x[])
         // uniform distribution in mind.
         int sub1 = subtract_dates(x ,arr[left].date);
         int sub2 = subtract_dates(arr[right].date ,arr[left].date);
-        next = left + (((double)(right - left) / (sub2) * (sub1)));
+        next = (sub1*(right-left)/sub2) + left;
 
         // Condition of target found
-        if (compare_dates(arr[next].date, x) == 0) //arr[pos].date == x
+        if (compare_dates(x, arr[next].date) == 0) //arr[next].date == x
             return next;
 
         // If x is larger, x is in right sub array
-        if (compare_dates(arr[next].date, x) == -1)  //arr[pos].date < x
+        if (compare_dates(x, arr[next].date) == 1)  //x > arr[next].date
             return interpolationSearch(arr, next + 1, right, x);
 
         // If x is smaller, x is in left sub array
-        if (compare_dates(arr[next].date, x) == 1)  //arr[pos].date > x
+        if (compare_dates(x, arr[next].date) == -1)  // x < arr[next].date
             return interpolationSearch(arr, left, next - 1, x);
     }
     return -1;
@@ -191,7 +190,6 @@ int main()
         index = interpolationSearch(values, 0, size-1, date);
         clock_t end = clock();
         double time = (double) (end-start) / CLOCKS_PER_SEC;
-        printf("It took %f secs to run the algorithm\n", time);
         if(index==-1)
         {
             invalid_date = true;
@@ -219,6 +217,7 @@ int main()
         }
     }
     while(invalid_date);
+    printf("It took %f secs to run the algorithm\n", time);
     bool loop = true;
     do
     {
