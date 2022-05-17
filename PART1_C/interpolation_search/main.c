@@ -77,30 +77,74 @@ int compare_dates(char date1_s[], char date2_s[])
     }
 }
 
+// To store number of days in
+// all months from January to Dec.
+const int monthDays[12]
+    = { 31, 28, 31, 30, 31, 30,
+       31, 31, 30, 31, 30, 31 };
+
+// This function counts number of
+// leap years before the given date
+int countLeapYears(date d)
+{
+    int years = d.year;
+
+    // Check if the current year needs to be
+    //  considered for the count of leap years
+    // or not
+    if (d.month <= 2)
+        years--;
+
+    // An year is a leap year if it
+    // is a multiple of 4,
+    // multiple of 400 and not a
+     // multiple of 100.
+    return years / 4
+           - years / 100
+           + years / 400;
+}
+
+// This function returns number of
+// days between two given dates
 int subtract_dates(char date1_s[], char date2_s[])
 {
-    date date1; //make 2 date structs
-    date date2;
-    date1 = dateString_to_dateStruct(date1_s);
-    date2 = dateString_to_dateStruct(date2_s);
-    int days = 0; //this variable counts the days between date1 and date2
-    if(date1.year==date2.year)
-    {
-        days = 31*abs(date1.month-date2.month);
-        days += abs(date1.day-date2.day);
-        return days;
-    }
-    else
-    {
-        days = 31*(12-date2.month); // in this many days: date2 = 12/date2.day/date2.year
-        days += 31-date2.day; //in this many days: date2 = 01/01/date2.year-1 if(date1.year<date2.year) or date2 = 01/01/date2.year+1 if(date1.year>date2.year)
-        if(date1.year>date2.year) days += 365*abs(date1.year-date2.year+1); //date2 = 01/01/date1.year
-        else if(date1.year<date2.year) days += 365*abs(date1.year-date2.year-1); // date2 = 1/1/date1.year
-        days += 30*(date1.month-1); //date2 = date1.month/01/date1.year
-        days += date1.day-1; //date2 = date1.month/date1.day/date1.year
-        return days;
-    }
+    date dt1;
+    date dt2;
+    dt1 = dateString_to_dateStruct(date1_s);
+    dt2 = dateString_to_dateStruct(date2_s);
 
+    // COUNT TOTAL NUMBER OF DAYS
+    // BEFORE FIRST DATE 'dt1'
+
+    // initialize count using years and day
+    long int n1 = dt1.year * 365 + dt1.day;
+
+    // Add days for months in given date
+    for (int i = 0; i < dt1.month - 1; i++)
+        n1 += monthDays[i];
+
+    // Since every leap year is of 366 days,
+    // Add a day for every leap year
+    n1 += countLeapYears(dt1);
+
+    // SIMILARLY, COUNT TOTAL NUMBER OF
+    // DAYS BEFORE 'dt2'
+
+    long int n2 = dt2.year * 365 + dt2.day;
+    for (int i = 0; i < dt2.month- 1; i++)
+        n2 += monthDays[i];
+    n2 += countLeapYears(dt2);
+
+    // return difference between two counts
+    if(compare_dates(date1_s, date2_s)==1)
+    {
+        return (n1-n2);
+    }
+    else if(compare_dates(date1_s, date2_s)==-1)
+    {
+        return (n2-n1);
+    }
+    else return 0;
 }
 
 int interpolationSearch(measurements arr[], int left, int right, char x[])

@@ -24,15 +24,11 @@ void print_measurments(measurements values[])
     }
 }
 
-//if m1.date>m2.date it returns 1 if m1.date<m2.date -1 and if its equal it returns 0
-int compare_dates(char date1_s[], char date2_s[])
+date dateString_to_dateStruct(char date1_s[])
 {
     date date1; //make 2 date structs
-    date date2;
     char temp_date1[20]; //cant use strtok() on the original date string because it will change it
-    char temp_date2[20];
     strcpy(temp_date1,date1_s);
-    strcpy(temp_date2,date2_s);
     char *temp1 = strtok(temp_date1, "/"); //seperate month/day/year with strtok()
     for(int i = 0; i<3; i++)
     {
@@ -50,24 +46,16 @@ int compare_dates(char date1_s[], char date2_s[])
         }
         temp1 = strtok(NULL, "/");
     }
-    //I need 2 different loops for each date because strtok() doesnt work with two strings at the same time
-    char *temp2 = strtok(temp_date2, "/");
-    for(int i = 0; i<3; i++)
-    {
-        if(i == 0)
-        {
-           date2.month = atoi(temp2);
-        }
-        if(i == 1)
-        {
-            date2.day = atoi(temp2);
-        }
-        if(i == 2)
-        {
-            date2.year = atoi(temp2);
-        }
-        temp2 = strtok(NULL, "/");
-    }
+    return date1;
+}
+
+//if m1.date>m2.date it returns 1 if m1.date<m2.date -1 and if its equal it returns 0
+int compare_dates(char date1_s[], char date2_s[])
+{
+    date date1; //make 2 date structs
+    date date2;
+    date1 = dateString_to_dateStruct(date1_s);
+    date2 = dateString_to_dateStruct(date2_s);
     //comparison between the two date structs first by year then by month then by day
     if (date1.year < date2.year)
        return -1;

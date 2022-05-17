@@ -78,69 +78,6 @@ int compare_dates(char date1_s[], char date2_s[])
     }
 }
 
-/*int subtract_dates(char date1_s[], char date2_s[])
-{
-    date date1; //make 2 date structs
-    date date2;
-    date1 = dateString_to_dateStruct(date1_s);
-    date2 = dateString_to_dateStruct(date2_s);
-    int days = 0; //this variable counts the days between date1 and date2
-    if(date1.year==date2.year)
-    {
-        days = 31*abs(date1.month-date2.month);
-        days += abs(date1.day-date2.day);
-        return days;
-    }
-    else
-    {
-        days = 31*(12-date2.month); // in this many days: date2 = 12/date2.day/date2.year
-        days += 31-date2.day; //in this many days: date2 = 01/01/date2.year-1 if(date1.year<date2.year) or date2 = 01/01/date2.year+1 if(date1.year>date2.year)
-        if(abs(date1.year-date2.year)==1) // if the dates' years differ by 1
-        {
-            days += 30*(date1.month-1); //date2 = date1.month/01/date1.year
-            days += date1.day-1; //date2 = date1.month/date1.day/date1.year
-            return days;
-        }
-        if(date1.year>date2.year) days += 365*abs(date1.year-date2.year+1); //date2 = 01/01/date1.year
-        else if(date1.year<date2.year) days += 365*abs(date1.year-date2.year-1); // date2 = 1/1/date1.year
-        days += 30*(date1.month-1); //date2 = date1.month/01/date1.year
-        days += date1.day-1; //date2 = date1.month/date1.day/date1.year
-        return days;
-    }
-}*/
-
-/*int subtract_dates(char date1_s[], char date2_s[])
-{
-    date date1; //make 2 date structs
-    date date2;
-    date1 = dateString_to_dateStruct(date1_s);
-    date2 = dateString_to_dateStruct(date2_s);
-    struct tm ti1={0};
-    struct tm ti2={0};
-    ti1.tm_year = date1.year;
-    ti1.tm_mon = date1.month;
-    ti1.tm_mday = date1.day;
-    ti2.tm_year = date2.year;
-    ti2.tm_mon = date2.month;
-    ti2.tm_mday = date2.day;
-    time_t epoch_date1;
-    time_t epoch_date2;
-    epoch_date1 = mktime(&ti1);
-    epoch_date2 = mktime(&ti2);
-    time_t difference = 0;
-    if(compare_dates(date1_s, date2_s)==1)
-    {
-        difference = epoch_date1 - epoch_date2;
-        difference;
-    }
-    else if(compare_dates(date1_s, date2_s)==-1)
-    {
-        difference = epoch_date2 - epoch_date1;
-        return difference;
-    }
-    else return 0;
-
-}*/
 // To store number of days in
 // all months from January to Dec.
 const int monthDays[12]
@@ -213,15 +150,13 @@ int subtract_dates(char date1_s[], char date2_s[])
 
 int binary_interpolation_search(measurements arr[], int left, int right, char x[])
 {
-    //int global_right = right; //to check if we input an invalid date
-    //int glogal_left = left;
     if(compare_dates(x, arr[left].date)==-1 || compare_dates(x, arr[right].date)==1) // if(x<arr[left].date) or if(x>arr[right].date)
         return -1;
     int result = -2;
     int size = right-left+1;
     int sub1 = subtract_dates(x ,arr[left].date);
     int sub2 = subtract_dates(arr[right].date ,arr[left].date);
-    int next =(size * sub1 / sub2);
+    int next =((size) * sub1 / sub2);
     result = compare_dates(x, arr[next].date);
     while(result==1 || result==-1)
     {
@@ -261,8 +196,6 @@ int binary_interpolation_search(measurements arr[], int left, int right, char x[
         sub2 = subtract_dates(arr[right].date ,arr[left].date);
         next = left + ((right-left+1) * sub1 / sub2);
         result = compare_dates(x, arr[next].date);
-        //global_right = right;
-        //glogal_left = left;
     }
     result = compare_dates(x, arr[next].date);
     if(result == 0)
@@ -364,7 +297,7 @@ int main()
         printf("Enter your choice: ");
         scanf(" %d", &choice);
         while ((getchar()) != '\n');
-        if((choice != 1) & (choice != 2) & (choice != 3) & (choice != 4) & (choice != 4))
+        if((choice != 1) & (choice != 2) & (choice != 3) & (choice != 4) & (choice != 5))
         {
             system("cls");
             continue;
@@ -385,7 +318,7 @@ int main()
                 system("cls"); //works only on windows
                 continue;
             case 5:
-                printf("Exiting...");
+                printf("Exiting...\n");
                 loop = false;
         }
         if(loop)
@@ -397,47 +330,6 @@ int main()
 
     }
     while(loop);
-    /*printf("It took %f secs to run the algorithm\n", time);
-    bool loop = true;
-    do
-    {
-        int choice = 0;
-        printf("Do you want to access the temperature or phosphate reading?\n");
-        printf("Temperature: 1\n");
-        printf("Phosphate: 2\n");
-        printf("Both: 3\n");
-        printf("Exit: 4\n");
-        printf("Enter your choice: ");
-        scanf(" %d", &choice);
-        while ((getchar()) != '\n');
-        if((choice != 1) & (choice != 2) & (choice != 3) & (choice != 4))
-        {
-            system("cls");
-            continue;
-        }
-        switch(choice)
-        {
-            case 1:
-                printf("The temperature on %s was %s\n", date, values[index].temp);
-                break;
-            case 2:
-                printf("The phosphate reading on %s was %s\n", date, values[index].phosphate);
-                break;
-            case 3:
-                printf("The temperature on %s was %s C and the phosphate reading was %s\n", date, values[index].temp, values[index].phosphate);
-                break;
-            case 4:
-                printf("Exiting...");
-                loop = false;
-        }
-        if(loop)
-        {
-            printf("Press any key to continue ");
-            //getch();
-            system("cls"); //works only on windows
-        }
-    }
-    while(loop);*/
 
     return 0;
 }
