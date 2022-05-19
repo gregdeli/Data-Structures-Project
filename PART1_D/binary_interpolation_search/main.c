@@ -254,7 +254,6 @@ int main()
         loop = false;
         printf("Enter a date(mm/dd/yy): ");
         scanf("%s", date);
-        int temp = atoi(date);
         int size = sizeof(values)/sizeof(measurements);
         clock_t start = clock();
         index = binary_interpolation_search(values, 0, size-1, date);
@@ -305,12 +304,18 @@ int main()
         {
             case 1:
                 printf("The temperature on %s was %s\n", date, values[index].temp);
+                loop = true;
+                break;
 
             case 2:
                 printf("The phosphate reading on %s was %s\n", date, values[index].phosphate);
+                loop = true;
+                break;
 
             case 3:
                 printf("The temperature on %s was %s C and the phosphate reading was %s\n", date, values[index].temp, values[index].phosphate);
+                loop = true;
+                break;
 
             case 4:
                 loop = true;
@@ -319,11 +324,12 @@ int main()
             case 5:
                 printf("Exiting...\n");
                 loop = false;
+                break;
         }
         if(loop)
         {
-            printf("Press any key to continue ");
-            //getch();
+            printf("\nPress any key to continue...");
+            getch();
             system("cls"); //works only on windows
         }
 

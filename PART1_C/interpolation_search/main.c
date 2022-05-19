@@ -147,7 +147,7 @@ int subtract_dates(char date1_s[], char date2_s[])
     else return 0;
 }
 
-int interpolationSearch(measurements arr[], int left, int right, char x[])
+int interpolation_search(measurements arr[], int left, int right, char x[])
 {
     int next;
     // Since array is sorted, an element present
@@ -171,11 +171,11 @@ int interpolationSearch(measurements arr[], int left, int right, char x[])
 
         // If x is larger, x is in right sub array
         if (compare_dates(x, arr[next].date) == 1)  //x > arr[next].date
-            return interpolationSearch(arr, next + 1, right, x);
+            return interpolation_search(arr, next + 1, right, x);
 
         // If x is smaller, x is in left sub array
         if (compare_dates(x, arr[next].date) == -1)  // x < arr[next].date
-            return interpolationSearch(arr, left, next - 1, x);
+            return interpolation_search(arr, left, next - 1, x);
     }
     return -1;
 }
@@ -223,21 +223,20 @@ int main()
     //now I have an array of structs that contain the dates and temps from to ocean.csv
     char date[20];
     int index;
-    bool invalid_date;
-    double time;
+    bool loop;
     do
     {
-        invalid_date = false;
+        loop = false;
         printf("Enter a date(mm/dd/yy): ");
         scanf("%s", date);
         int size = sizeof(values)/sizeof(measurements);
         clock_t start = clock();
-        index = interpolationSearch(values, 0, size-1, date);
+        index = interpolation_search(values, 0, size-1, date);
         clock_t end = clock();
-        time = (double) (end-start) / CLOCKS_PER_SEC;
+        double time = (double) (end-start) / CLOCKS_PER_SEC;
         if(index==-1)
         {
-            invalid_date = true;
+            loop = true;
             int choice = 0;
             printf("Invalid date!\n\n");
             printf("Continue: 1\n");
@@ -254,28 +253,24 @@ int main()
             {
                 case 1:
                     system("cls"); //works only on windows
-                    break;
+                    continue;
                 case 2:
                     return 0;
 
             }
         }
-    }
-    while(invalid_date);
-    printf("It took %f secs to run the algorithm\n", time);
-    bool loop = true;
-    do
-    {
+        printf("It took %f secs to run the algorithm\n", time);
         int choice = 0;
         printf("Do you want to access the temperature or phosphate reading?\n");
         printf("Temperature: 1\n");
         printf("Phosphate: 2\n");
         printf("Both: 3\n");
-        printf("Exit: 4\n");
+        printf("New date: 4\n");
+        printf("Exit: 5\n");
         printf("Enter your choice: ");
         scanf(" %d", &choice);
         while ((getchar()) != '\n');
-        if((choice != 1) & (choice != 2) & (choice != 3) & (choice != 4))
+        if((choice != 1) & (choice != 2) & (choice != 3) & (choice != 4) & (choice != 5))
         {
             system("cls");
             continue;
@@ -284,23 +279,35 @@ int main()
         {
             case 1:
                 printf("The temperature on %s was %s\n", date, values[index].temp);
+                loop = true;
                 break;
+
             case 2:
                 printf("The phosphate reading on %s was %s\n", date, values[index].phosphate);
+                loop = true;
                 break;
+
             case 3:
                 printf("The temperature on %s was %s C and the phosphate reading was %s\n", date, values[index].temp, values[index].phosphate);
+                loop = true;
                 break;
+
             case 4:
-                printf("Exiting...");
+                loop = true;
+                system("cls"); //works only on windows
+                continue;
+            case 5:
+                printf("Exiting...\n");
                 loop = false;
+                break;
         }
         if(loop)
         {
-            printf("Press any key to continue ");
-            //getch();
+            printf("\nPress any key to continue...");
+            getch();
             system("cls"); //works only on windows
         }
+
     }
     while(loop);
 

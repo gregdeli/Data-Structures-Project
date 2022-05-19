@@ -142,22 +142,20 @@ int main()
     //now I have an array of structs that contain the dates and temps from to ocean.csv
     char date[20];
     int index;
-    bool invalid_date;
+    bool loop;
     do
     {
-        invalid_date = false;
+        loop = false;
         printf("Enter a date(mm/dd/yy): ");
         scanf("%s", date);
         int size = sizeof(values)/sizeof(measurements);
-        clock_t start, end;
-        start = clock();
+        clock_t start = clock();
         index = binary_search(values, 0, size-1, date);
-        end = clock();
-        double time = (double)(end - start)/CLOCKS_PER_SEC;
-        printf("It took %lf secs to run the algorithm\n", time);
+        clock_t end = clock();
+        double time = (double) (end-start) / CLOCKS_PER_SEC;
         if(index==-1)
         {
-            invalid_date = true;
+            loop = true;
             int choice = 0;
             printf("Invalid date!\n\n");
             printf("Continue: 1\n");
@@ -174,27 +172,24 @@ int main()
             {
                 case 1:
                     system("cls"); //works only on windows
-                    break;
+                    continue;
                 case 2:
                     return 0;
 
             }
         }
-    }
-    while(invalid_date);
-    bool loop = true;
-    do
-    {
+        printf("It took %f secs to run the algorithm\n", time);
         int choice = 0;
         printf("Do you want to access the temperature or phosphate reading?\n");
         printf("Temperature: 1\n");
         printf("Phosphate: 2\n");
         printf("Both: 3\n");
-        printf("Exit: 4\n");
+        printf("New date: 4\n");
+        printf("Exit: 5\n");
         printf("Enter your choice: ");
         scanf(" %d", &choice);
         while ((getchar()) != '\n');
-        if((choice != 1) & (choice != 2) & (choice != 3) & (choice != 4))
+        if((choice != 1) & (choice != 2) & (choice != 3) & (choice != 4) & (choice != 5))
         {
             system("cls");
             continue;
@@ -203,23 +198,35 @@ int main()
         {
             case 1:
                 printf("The temperature on %s was %s\n", date, values[index].temp);
+                loop = true;
                 break;
+
             case 2:
                 printf("The phosphate reading on %s was %s\n", date, values[index].phosphate);
+                loop = true;
                 break;
+
             case 3:
                 printf("The temperature on %s was %s C and the phosphate reading was %s\n", date, values[index].temp, values[index].phosphate);
+                loop = true;
                 break;
+
             case 4:
-                printf("Exiting...");
+                loop = true;
+                system("cls"); //works only on windows
+                continue;
+            case 5:
+                printf("Exiting...\n");
                 loop = false;
+                break;
         }
         if(loop)
         {
-            printf("Press any key to continue ");
-            //getch();
+            printf("\nPress any key to continue...");
+            getch();
             system("cls"); //works only on windows
         }
+
     }
     while(loop);
 
