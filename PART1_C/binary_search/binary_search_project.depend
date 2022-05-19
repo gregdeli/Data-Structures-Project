@@ -17,12 +17,14 @@
 	<stdlib.h>
 	<time.h>
 
-1651941712 source:c:\users\greg\documents\github\data_structures_project\part1_c\binary_search\main.c
+1652991453 source:c:\users\greg\documents\github\data_structures_project\part1_c\binary_search\main.c
 	<stdio.h>
 	<string.h>
 	<stdbool.h>
 	<stdlib.h>
 	<time.h>
+	<unistd.h>
+	<Windows.h>
 
 1652810194 source:/home/greg/Desktop/GitHub/data_structures_project/PART1_C/binary_search/main.c
 	<stdio.h>

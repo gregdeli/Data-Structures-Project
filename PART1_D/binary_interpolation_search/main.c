@@ -3,7 +3,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
-#include <math.h>
 
 typedef struct measurements{
     char date[20],temp[6], phosphate[6];
@@ -324,7 +323,7 @@ int main()
         if(loop)
         {
             printf("Press any key to continue ");
-            //getch();
+            getch();
             system("cls"); //works only on windows
         }
 

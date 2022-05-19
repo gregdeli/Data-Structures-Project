@@ -224,6 +224,7 @@ int main()
     char date[20];
     int index;
     bool invalid_date;
+    double time;
     do
     {
         invalid_date = false;
@@ -233,7 +234,7 @@ int main()
         clock_t start = clock();
         index = interpolationSearch(values, 0, size-1, date);
         clock_t end = clock();
-        double time = (double) (end-start) / CLOCKS_PER_SEC;
+        time = (double) (end-start) / CLOCKS_PER_SEC;
         if(index==-1)
         {
             invalid_date = true;
@@ -297,7 +298,7 @@ int main()
         if(loop)
         {
             printf("Press any key to continue ");
-            //getch();
+            getch();
             system("cls"); //works only on windows
         }
     }
