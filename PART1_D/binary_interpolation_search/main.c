@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 typedef struct measurements{
     char date[20],temp[6], phosphate[6];
@@ -203,6 +204,97 @@ int binary_interpolation_search(measurements arr[], int left, int right, char x[
         return -1;
 
 }
+int binary_interpolation_search_improved(measurements arr[], int left, int right, char x[])
+{
+    if(compare_dates(x, arr[left].date)==-1 || compare_dates(x, arr[right].date)==1) // if(x<arr[left].date) or if(x>arr[right].date)
+        return -1;
+    int result = -2;
+    int size = right-left+1;
+    int sub1 = subtract_dates(x ,arr[left].date);
+    int sub2 = subtract_dates(arr[right].date ,arr[left].date);
+    int next =((size) * sub1 / sub2);
+    result = compare_dates(x, arr[next].date);
+    int i = 1;
+    if(result == 1 || result == 0) //if x >= arr[next].date
+        {
+            int pos;
+            int res = compare_dates(x, arr[next].date);
+            while(res == 1) //while x>arr[pos].date
+            {
+                i = 2*i;
+                pos = next+i*sqrt(size);
+                res = compare_dates(x, arr[pos].date);
+            }
+            right = next + i*sqrt(size);
+            left = next + (i-1)*sqrt(size);
+        }
+        if(result == -1) //if x < arr[next].date
+        {
+            int pos;
+            int res = compare_dates(x, arr[next].date);
+            while(res == -1)
+            {
+                i = 2*i;
+                pos = next-i*sqrt(size);
+                res = compare_dates(x, arr[pos].date);
+            }
+                right = next - (i-1)*sqrt(size);
+                left = next - i*sqrt(size);
+        }
+        if(compare_dates(x, arr[right].date)==0)
+            return right;
+        if(compare_dates(x, arr[left].date)==0)
+            return left;
+        sub1 = subtract_dates(x ,arr[left].date);
+        sub2 = subtract_dates(arr[right].date ,arr[left].date);
+        next = left + ((right-left+1) * sub1 / sub2);
+        result = compare_dates(x, arr[next].date);
+    while(result==1 || result==-1)
+    {
+        i = 0;
+        size = right - left + 1;
+        if(result == 1 || result == 0) //if x >= arr[next].date
+        {
+            int pos = next+i*sqrt(size);
+            int res = compare_dates(x, arr[pos].date);
+            while(res == 1) //while x>arr[pos].date
+            {
+                i++;
+                pos = next+i*sqrt(size);
+                res = compare_dates(x, arr[pos].date);
+            }
+            right = next + i*sqrt(size);
+            left = next + (i-1)*sqrt(size);
+        }
+        if(result == -1) //if x < arr[next].date
+        {
+            int pos = next-i*sqrt(size);
+            int res = compare_dates(x, arr[pos].date);
+            while(res == -1)
+            {
+                i++;
+                pos = next-i*sqrt(size);
+                res = compare_dates(x, arr[pos].date);
+            }
+            right = next - (i-1)*sqrt(size);
+            left = next - i*sqrt(size);
+        }
+        if(compare_dates(x, arr[right].date)==0)
+            return right;
+        if(compare_dates(x, arr[left].date)==0)
+            return left;
+        sub1 = subtract_dates(x ,arr[left].date);
+        sub2 = subtract_dates(arr[right].date ,arr[left].date);
+        next = left + ((right-left+1) * sub1 / sub2);
+        result = compare_dates(x, arr[next].date);
+    }
+    result = compare_dates(x, arr[next].date);
+    if(result == 0)
+        return next;
+    else
+        return -1;
+
+}
 
 
 int main()
@@ -251,14 +343,49 @@ int main()
     bool loop;
     do
     {
-        loop = false;
-        printf("Enter a date(mm/dd/yy): ");
-        scanf("%s", date);
-        int size = sizeof(values)/sizeof(measurements);
-        clock_t start = clock();
-        index = binary_interpolation_search(values, 0, size-1, date);
-        clock_t end = clock();
-        double time = (double) (end-start) / CLOCKS_PER_SEC;
+        double time;
+        bool loop1 = false;
+        do
+        {
+            printf("Binary Interpolation Search: 1\n");
+            printf("Improved Binary Interpolation Search: 2\n");
+            printf("Enter your choice: ");
+            int choice = 0;
+            scanf("%d", &choice);
+            while ((getchar()) != '\n'); //reads input buffer until the end and discards them including newline
+            if(choice==1)
+            {
+                loop1 = false;
+                printf("Enter a date(mm/dd/yy): ");
+                scanf("%s", date);
+                int size = sizeof(values)/sizeof(measurements);
+                clock_t start = clock();
+                index = binary_interpolation_search(values, 0, size-1, date);
+                clock_t end = clock();
+                time = (double) (end-start) / CLOCKS_PER_SEC;
+                system("cls");
+            }
+            else if(choice==2)
+            {
+                loop1 = false;
+                printf("Enter a date(mm/dd/yy): ");
+                scanf("%s", date);
+                int size = sizeof(values)/sizeof(measurements);
+                clock_t start = clock();
+                index = binary_interpolation_search_improved(values, 0, size-1, date);
+                clock_t end = clock();
+                time = (double) (end-start) / CLOCKS_PER_SEC;
+                system("cls");
+            }
+            else
+            {
+                loop1 = true;
+                system("cls");
+            }
+
+        }
+        while(loop1);
+
         if(index==-1)
         {
             loop = true;
@@ -297,6 +424,7 @@ int main()
         while ((getchar()) != '\n');
         if((choice != 1) & (choice != 2) & (choice != 3) & (choice != 4) & (choice != 5))
         {
+            loop = true;
             system("cls");
             continue;
         }
@@ -329,7 +457,7 @@ int main()
         if(loop)
         {
             printf("\nPress any key to continue...");
-            getch();
+            //getch();
             system("cls"); //works only on windows
         }
 
@@ -338,3 +466,7 @@ int main()
 
     return 0;
 }
+
+
+
+
