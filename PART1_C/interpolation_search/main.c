@@ -243,7 +243,7 @@ int main()
             printf("Exit: 2\n");
             printf("Enter your choice: ");
             scanf("%d", &choice);
-            while ((getchar()) != '\n'); //reads input buffer until the end and discards them including newline
+            while ((getchar()) != '\n');//reads input buffer until the end and discards them including newline
             if((choice != 1)&(choice != 2))
             {
                 system("cls");
