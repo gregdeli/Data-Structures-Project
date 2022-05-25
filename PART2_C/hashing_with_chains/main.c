@@ -136,7 +136,7 @@ int main()
     //initialize hash table with node that have an impossible temp value so that we can check later if hash_table[i] "is empty"
     for(int i=0; i<11; i++)
         hash_table[i] = initial_node;
-    node node1;
+   /* node node1;
     node node2;
     node node3;
     node node4;
@@ -151,6 +151,6 @@ int main()
     insert(node1, hash_table);
     insert(node2, hash_table);
     insert(node3, hash_table);
-    insert(node4, hash_table);
+    insert(node4, hash_table);*/
     return 0;
 }
