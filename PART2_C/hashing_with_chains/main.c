@@ -55,7 +55,6 @@ void read_file(FILE *file, measurements values[])
     }
     fclose(file);
     //now I have an array of structs that contain the dates and temps from to ocean.csv
-    return values;
 }
 
 void print_measurments(measurements values[])
@@ -85,6 +84,44 @@ int hash_function(node node1)
     return sum % 11;
 }
 
+void build_hash_table(measurements values[])
+{
+
+}
+bool  is_empty(node n)
+{
+    if(n.temp == 200) return true;
+    else return false;
+}
+
+void insert(node new_node, node hash_table[])
+{
+    new_node.p = NULL;
+    int index = hash_function(new_node);
+    if(!is_empty(hash_table[index]))
+    {
+        node* node_pointer = hash_table[index].p;
+        if(node_pointer==NULL)
+            hash_table[index].p = &new_node;
+        else
+        {
+            while(node_pointer != NULL)
+            {
+                if((*node_pointer).p==NULL)
+                {
+                    (*node_pointer).p = &new_node;
+                    node_pointer = NULL;
+                }
+                else
+                    node_pointer = (*node_pointer).p;
+            }
+
+        }
+
+    }
+    else hash_table[index] = new_node;
+
+}
 
 
 int main()
@@ -93,10 +130,27 @@ int main()
     measurements values[1405];
     read_file(file, values);
     print_measurments(values);
+    node initial_node;
+    initial_node.temp = 200;
     node hash_table[11]; //because h(node) = ... mod11
+    //initialize hash table with node that have an impossible temp value so that we can check later if hash_table[i] "is empty"
+    for(int i=0; i<11; i++)
+        hash_table[i] = initial_node;
     node node1;
+    node node2;
+    node node3;
+    node node4;
     strcpy(node1.date, "1/1/2012");
+    strcpy(node2.date, "1/1/2012");
+    strcpy(node3.date, "1/1/2012");
+    strcpy(node4.date, "1/1/2012");
     node1.temp = 16.5;
-    int i = hash_function(node1);
+    node2.temp = 16.6;
+    node2.temp = 16.7;
+    node2.temp = 16.8;
+    insert(node1, hash_table);
+    insert(node2, hash_table);
+    insert(node3, hash_table);
+    insert(node4, hash_table);
     return 0;
 }
