@@ -21,6 +21,11 @@ typedef struct node
     struct node* tail; //pointer to last node
 }node;
 
+typedef struct date{
+    int month;
+    int day;
+    int year;
+}date;
 
 
 void read_file(FILE *file, measurements values[])
@@ -66,6 +71,60 @@ void print_measurments(measurements values[])
     }
 }
 
+date dateString_to_dateStruct(char date1_s[])
+{
+    date date1; //make 2 date structs
+    char temp_date1[20]; //cant use strtok() on the original date string because it will change it
+    strcpy(temp_date1,date1_s);
+    char *temp1 = strtok(temp_date1, "/"); //seperate month/day/year with strtok()
+    for(int i = 0; i<3; i++)
+    {
+        if(i == 0)
+        {
+            date1.month = atoi(temp1);
+        }
+        if(i == 1)
+        {
+            date1.day = atoi(temp1);
+        }
+        if(i == 2)
+        {
+            date1.year = atoi(temp1);
+        }
+        temp1 = strtok(NULL, "/");
+    }
+    return date1;
+}
+
+//if m1.date>m2.date it returns 1 if m1.date<m2.date -1 and if its equal it returns 0
+int compare_dates(char date1_s[], char date2_s[])
+{
+    date date1; //make 2 date structs
+    date date2;
+    date1 = dateString_to_dateStruct(date1_s);
+    date2 = dateString_to_dateStruct(date2_s);
+    //comparison between the two date structs first by year then by month then by day
+    if (date1.year < date2.year)
+       return -1;
+
+    else if (date1.year > date2.year)
+       return 1;
+
+    if (date1.year == date2.year)
+    {
+         if (date1.month<date2.month)
+              return -1;
+         else if (date1.month>date2.month)
+              return 1;
+         else if (date1.day<date2.day)
+              return -1;
+         else if(date1.day>date2.day)
+              return 1;
+         else
+              return 0;
+    }
+}
+
 int hash_function(node node1)
 {
     char num = 'a';
@@ -91,42 +150,48 @@ bool  is_empty(node n)
     else return false;
 }
 
-void insert(node new_node, node hash_table[])
+void insert(node* new_node, node hash_table[])
 {
-    int index = hash_function(new_node);
+    int index = hash_function(*new_node);
 
     if(!is_empty(hash_table[index]))
     {
-        //node* node_pointer = hash_table[index].p;
-        //if the pointer of the node in position (index) of the hash table is null then make iy point to the new node
         if(hash_table[index].next==NULL)
         {
-            hash_table[index].next = &new_node;
-            hash_table[index].tail = &new_node;
+            hash_table[index].next = new_node;
+            hash_table[index].tail = new_node;
         }
 
         else
         {
-            (*hash_table[index].tail).next = &new_node;
-            hash_table[index].tail = &new_node;
-            /*while(node_pointer != NULL)
-            {
-                //if the pointer of the node that is being pointed by the node_pointer is null the make it point to the new node
-                if((*node_pointer).p==NULL)
-                {
-                    (*node_pointer).p = &new_node;
-                    node_pointer = NULL;
-                }
-                else
-                    node_pointer = (*node_pointer).p;
-            }*/
-
+            (*hash_table[index].tail).next = new_node;
+            hash_table[index].tail = new_node;
         }
 
     }
     //if hash table at position (index) is empty insert the new node
-    else hash_table[index] = new_node;
+    else hash_table[index] = (*new_node);
 
+}
+
+float search(char date[], node hash_table[]) //returns temp
+{
+    node n;
+    strcpy(n.date, date);
+    int index = hash_function(n);
+    node* p_to_node;
+    p_to_node = &hash_table[index];
+    if((*p_to_node).temp==200) return 200; //if temp=200 then there is not a valid node in hash_table[index]
+    while((*p_to_node).next!=NULL)
+    {
+        if(compare_dates((*p_to_node).date, date)==0)
+                return (*p_to_node).temp;
+        else
+            p_to_node = (*p_to_node).next;
+        //if the last node on the chain doesn't contain the date you are looking for then it doesn't exist on the hash_table
+        if((*p_to_node).next == NULL)
+            return 200;
+    }
 }
 
 node measurement_to_node(measurements m)
@@ -139,14 +204,6 @@ node measurement_to_node(measurements m)
     return n;
 }
 
-/*void build_hash_table(measurements values[], int size_of_values, node hash_table[])
-{
-    for(int i=0; i<size_of_values; i++)
-    {
-        node new_node = measurement_to_node(values[i]);
-        insert(&new_node, hash_table);
-    }
-}*/
 
 
 int main()
@@ -155,13 +212,13 @@ int main()
     measurements values[1405];
     read_file(file, values);
     int size = sizeof(values)/sizeof(values[0]);
-    print_measurments(values);
+    //print_measurments(values);
     node hash_table[11]; //because h(node) = ... mod11
     //initialize hash table with node that have an impossible temp value so that we can check later if hash_table[i] "is empty"
     node initial_node;
     initial_node.temp = 200;
     for(int i=0; i<11; i++)
-        hash_table[i] = initial_node;
+        {hash_table[i] = initial_node;}
     //build node array an array with all the measurments in node form
     node node_array[size];
     for(int i=0; i<size; i++)
@@ -170,26 +227,9 @@ int main()
     }
     //build_hash_table
     for(int i=0; i<size; i++)
-    {
-        insert(node_array[i], hash_table);
-    }
-
-    /*node node1;
-    node node2;
-    node node3;
-    node node4;
-    strcpy(node1.date, "1/1/2012");
-    strcpy(node2.date, "1/1/2012");
-    strcpy(node3.date, "1/1/2014");
-    strcpy(node4.date, "1/1/2014");
-    node1.temp = 16.5;
-    node2.temp = 16.6;
-    node3.temp = 16.7;
-    node4.temp = 16.8;
-    //na to kanw na pairnei pointer se node
-    insert(&node1, hash_table);
-    insert(&node2, hash_table);
-    insert(&node3, hash_table);
-    insert(&node4, hash_table);*/
+        {insert(&node_array[i], hash_table);}
+    float temp = search("bfhbhfjs", hash_table);
+    if(temp==200) {printf("error");}
+    else {printf("%.2f", temp);}
     return 0;
 }
