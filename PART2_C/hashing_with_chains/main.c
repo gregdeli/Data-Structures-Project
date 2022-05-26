@@ -84,10 +84,6 @@ int hash_function(node node1)
     return sum % 11;
 }
 
-void build_hash_table(measurements values[])
-{
-
-}
 bool  is_empty(node n)
 {
     if(n.temp == 200) return true;
@@ -96,17 +92,19 @@ bool  is_empty(node n)
 
 void insert(node new_node, node hash_table[])
 {
-    new_node.p = NULL;
     int index = hash_function(new_node);
+
     if(!is_empty(hash_table[index]))
     {
         node* node_pointer = hash_table[index].p;
+        //if the pointer of the node in position (index) of the hash table is null then make iy point to the new node
         if(node_pointer==NULL)
             hash_table[index].p = &new_node;
         else
         {
             while(node_pointer != NULL)
             {
+                //if the pointer of the node that is being pointed by the node_pointer is null the make it point to the new node
                 if((*node_pointer).p==NULL)
                 {
                     (*node_pointer).p = &new_node;
@@ -119,8 +117,27 @@ void insert(node new_node, node hash_table[])
         }
 
     }
+    //if hash table at position (index) is empty insert the new node
     else hash_table[index] = new_node;
 
+}
+
+node measurement_to_node(measurements m)
+{
+    node n;
+    strcpy(n.date, m.date);
+    n.temp = m.temp;
+    n.p = NULL;
+    return n;
+}
+
+void build_hash_table(measurements values[], int size_of_values, node hash_table[])
+{
+    for(int i=0; i<size_of_values; i++)
+    {
+        node new_node = measurement_to_node(values[i]);
+        insert(new_node, hash_table);
+    }
 }
 
 
@@ -129,28 +146,31 @@ int main()
     FILE *file = fopen("ocean.csv", "r");
     measurements values[1405];
     read_file(file, values);
+    int size = sizeof(values)/sizeof(values[0]);
     print_measurments(values);
-    node initial_node;
-    initial_node.temp = 200;
     node hash_table[11]; //because h(node) = ... mod11
     //initialize hash table with node that have an impossible temp value so that we can check later if hash_table[i] "is empty"
+    node initial_node;
+    initial_node.temp = 200;
     for(int i=0; i<11; i++)
         hash_table[i] = initial_node;
-   /* node node1;
+    //build_hash_table(values, size, hash_table);
+    node node1;
     node node2;
     node node3;
     node node4;
     strcpy(node1.date, "1/1/2012");
     strcpy(node2.date, "1/1/2012");
-    strcpy(node3.date, "1/1/2012");
-    strcpy(node4.date, "1/1/2012");
+    strcpy(node3.date, "1/1/2014");
+    strcpy(node4.date, "1/1/2014");
     node1.temp = 16.5;
     node2.temp = 16.6;
-    node2.temp = 16.7;
-    node2.temp = 16.8;
+    node3.temp = 16.7;
+    node4.temp = 16.8;
+    //na to kanw na pairnei pointer se node
     insert(node1, hash_table);
     insert(node2, hash_table);
     insert(node3, hash_table);
-    insert(node4, hash_table);*/
+    insert(node4, hash_table);
     return 0;
 }
