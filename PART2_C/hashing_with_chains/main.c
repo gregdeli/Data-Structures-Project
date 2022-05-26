@@ -17,7 +17,8 @@ typedef struct node
 {
     char date[20];
     float temp;
-    struct node* p; //pointer to node
+    struct node* next; //pointer to next node
+    struct node* tail; //pointer to last node
 }node;
 
 
@@ -96,13 +97,19 @@ void insert(node new_node, node hash_table[])
 
     if(!is_empty(hash_table[index]))
     {
-        node* node_pointer = hash_table[index].p;
+        //node* node_pointer = hash_table[index].p;
         //if the pointer of the node in position (index) of the hash table is null then make iy point to the new node
-        if(node_pointer==NULL)
-            hash_table[index].p = &new_node;
+        if(hash_table[index].next==NULL)
+        {
+            hash_table[index].next = &new_node;
+            hash_table[index].tail = &new_node;
+        }
+
         else
         {
-            while(node_pointer != NULL)
+            (*hash_table[index].tail).next = &new_node;
+            hash_table[index].tail = &new_node;
+            /*while(node_pointer != NULL)
             {
                 //if the pointer of the node that is being pointed by the node_pointer is null the make it point to the new node
                 if((*node_pointer).p==NULL)
@@ -112,7 +119,7 @@ void insert(node new_node, node hash_table[])
                 }
                 else
                     node_pointer = (*node_pointer).p;
-            }
+            }*/
 
         }
 
@@ -127,18 +134,19 @@ node measurement_to_node(measurements m)
     node n;
     strcpy(n.date, m.date);
     n.temp = m.temp;
-    n.p = NULL;
+    n.next = NULL;
+    n.tail = NULL;
     return n;
 }
 
-void build_hash_table(measurements values[], int size_of_values, node hash_table[])
+/*void build_hash_table(measurements values[], int size_of_values, node hash_table[])
 {
     for(int i=0; i<size_of_values; i++)
     {
         node new_node = measurement_to_node(values[i]);
-        insert(new_node, hash_table);
+        insert(&new_node, hash_table);
     }
-}
+}*/
 
 
 int main()
@@ -154,8 +162,19 @@ int main()
     initial_node.temp = 200;
     for(int i=0; i<11; i++)
         hash_table[i] = initial_node;
-    //build_hash_table(values, size, hash_table);
-    node node1;
+    //build node array an array with all the measurments in node form
+    node node_array[size];
+    for(int i=0; i<size; i++)
+    {
+        node_array[i] = measurement_to_node(values[i]);
+    }
+    //build_hash_table
+    for(int i=0; i<size; i++)
+    {
+        insert(node_array[i], hash_table);
+    }
+
+    /*node node1;
     node node2;
     node node3;
     node node4;
@@ -168,9 +187,9 @@ int main()
     node3.temp = 16.7;
     node4.temp = 16.8;
     //na to kanw na pairnei pointer se node
-    insert(node1, hash_table);
-    insert(node2, hash_table);
-    insert(node3, hash_table);
-    insert(node4, hash_table);
+    insert(&node1, hash_table);
+    insert(&node2, hash_table);
+    insert(&node3, hash_table);
+    insert(&node4, hash_table);*/
     return 0;
 }
