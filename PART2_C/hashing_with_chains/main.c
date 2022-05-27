@@ -19,6 +19,7 @@ typedef struct node
     float temp;
     struct node* next; //pointer to next node
     struct node* tail; //pointer to last node
+    bool is_head;
 }node;
 
 typedef struct date{
@@ -170,16 +171,19 @@ void insert(node* new_node, node hash_table[])
 
     }
     //if hash table at position (index) is empty insert the new node
-    else hash_table[index] = (*new_node);
-
+    else
+    {
+        (*new_node).is_head = true;
+        hash_table[index] = (*new_node);
+    }
 }
 
-float search(char date[], node hash_table[]) //returns temp
+float access_temp(char date[], node hash_table[]) //returns temp
 {
     node n;
     strcpy(n.date, date);
     int index = hash_function(n);
-    node* p_to_node;
+    node* p_to_node; //pointer to node
     p_to_node = &hash_table[index];
     if((*p_to_node).temp==200) return 200; //if temp=200 then there is not a valid node in hash_table[index]
     while((*p_to_node).next!=NULL)
@@ -193,6 +197,66 @@ float search(char date[], node hash_table[]) //returns temp
             return 200;
     }
 }
+//if date is not found return -1 else change the temp of the given date and return 1
+int edit_temp(char date[],float new_temp, node hash_table[])
+{
+    node n;
+    strcpy(n.date, date);
+    int index = hash_function(n);
+    node* p_to_node; //pointer to node
+    p_to_node = &hash_table[index];
+    if((*p_to_node).temp==200) return -1; //if temp=200 then there is not a valid node in hash_table[index]
+    while((*p_to_node).next!=NULL)
+    {
+        if(compare_dates((*p_to_node).date, date)==0)
+        {
+            (*p_to_node).temp = new_temp;
+            return 1;
+        }
+        else
+            p_to_node = (*p_to_node).next;
+        //if the last node on the chain doesn't contain the date you are looking for then it doesn't exist on the hash_table
+        if((*p_to_node).next == NULL)
+            return -1;
+    }
+}
+
+int delete_measurement(char date[], node hash_table[])
+{
+    node n;
+    strcpy(n.date, date);
+    int index = hash_function(n);
+    node* p_to_node; //pointer to node
+    node* previous_node = NULL; //pointer to the previous node;
+    p_to_node = &hash_table[index];
+    if((*p_to_node).temp==200) return -1; //if temp=200 then there is not a valid node in hash_table[index]
+    while((*p_to_node).next!=NULL)
+    {
+        if(compare_dates((*p_to_node).date, date)==0)
+        {
+            if((*p_to_node).is_head == true)
+            {
+                strcpy(hash_table[index].date, (*hash_table[index].next).date);
+                hash_table[index].temp = (*hash_table[index].next).temp;
+                hash_table[index].next = (*hash_table[index].next).next;
+                return 1;
+            }
+            else
+            {
+                (*previous_node).next = (*p_to_node).next;
+                return 1;
+            }
+        }
+        else
+        {
+            previous_node = p_to_node;
+            p_to_node = (*p_to_node).next;
+        }
+        //if the last node on the chain doesn't contain the date you are looking for then it doesn't exist on the hash_table
+        if((*p_to_node).next == NULL)
+            return -1;
+    }
+}
 
 node measurement_to_node(measurements m)
 {
@@ -201,6 +265,7 @@ node measurement_to_node(measurements m)
     n.temp = m.temp;
     n.next = NULL;
     n.tail = NULL;
+    n.is_head = false;
     return n;
 }
 
@@ -212,24 +277,33 @@ int main()
     measurements values[1405];
     read_file(file, values);
     int size = sizeof(values)/sizeof(values[0]);
-    //print_measurments(values);
     node hash_table[11]; //because h(node) = ... mod11
     //initialize hash table with node that have an impossible temp value so that we can check later if hash_table[i] "is empty"
     node initial_node;
     initial_node.temp = 200;
     for(int i=0; i<11; i++)
         {hash_table[i] = initial_node;}
-    //build node array an array with all the measurments in node form
+    //build node array an array with all the measurments in node form so that each node is in a different place in memory
     node node_array[size];
     for(int i=0; i<size; i++)
-    {
         node_array[i] = measurement_to_node(values[i]);
-    }
     //build_hash_table
     for(int i=0; i<size; i++)
         {insert(&node_array[i], hash_table);}
-    float temp = search("bfhbhfjs", hash_table);
-    if(temp==200) {printf("error");}
-    else {printf("%.2f", temp);}
+    //testing
+    float temp = access_temp("01/09/2000", hash_table);
+    if(temp==200) {printf("error\n");}
+    else {printf("%.2f\n", temp);}
+    int res = edit_temp("01/09/2000", 69.01, hash_table);
+    if(res==-1) {printf("error\n");}
+    else {printf("%.2f\n", access_temp("01/09/2000", hash_table));}
+    res = delete_measurement("02/13/2003", hash_table);
+    if(res==-1) {printf("error\n");}
+    else
+    {
+        temp = access_temp("02/14/2003", hash_table);
+        if(temp==200) {printf("error\n");}
+        else {printf("%.2f\n", temp);}
+    }
     return 0;
 }
