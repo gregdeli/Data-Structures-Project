@@ -290,7 +290,7 @@ int main()
     //build_hash_table
     for(int i=0; i<size; i++)
         {insert(&node_array[i], hash_table);}
-    //testing
+    /*//testing
     float temp = access_temp("01/09/2000", hash_table);
     if(temp==200) {printf("error\n");}
     else {printf("%.2f\n", temp);}
@@ -304,6 +304,114 @@ int main()
         temp = access_temp("02/14/2003", hash_table);
         if(temp==200) {printf("error\n");}
         else {printf("%.2f\n", temp);}
+    }*/
+    //menu
+    int choice = 0;
+    bool loop;
+    do
+    {
+        loop = false;
+        printf("Search Temperature: 1\n");
+        printf("Edit Temperature: 2\n");
+        printf("Delete Measurement: 3\n");
+        printf("Exit: 4\n");
+        printf("Enter your choice: ");
+        scanf(" %d", &choice);
+        while ((getchar()) != '\n');
+        if((choice != 1) & (choice != 2) & (choice != 3) & (choice != 4))
+        {
+            loop = true;
+            #ifdef __linux__
+                system("clear");
+            #endif
+            continue;
+        }
+        char date[15];
+        if(choice!=4) printf("Enter a date(mm/dd/yy): ");
+        scanf("%s", date);
+        switch(choice)
+        {
+            case 1:
+                {
+                    float temp = access_temp(date, hash_table);
+                    if(temp==200)
+                    {
+                        printf("error\n");
+                        loop = true;
+                        #ifdef __linux__
+                            system("clear");
+                        #endif
+                        continue;
+                    }
+                    else
+                    {
+                        printf("The temperature on %s was %.2f",date, temp);
+                        loop = false;
+                        break;
+
+
+                    }
+                }
+            case 2:
+                {
+                    float old_temp = access_temp(date, hash_table);
+                    float new_temp;
+                    scanf("%f", &new_temp);
+                    int res = edit_temp(date, new_temp, hash_table);
+                    if(res==-1)
+                    {
+                        printf("error\n");
+                        loop = true;
+                        #ifdef __linux__
+                            system("clear");
+                        #endif
+                        continue;
+                    }
+                    else
+                    {
+                        printf("The temperature on %s was changed from %.2f to %.2f\n", date, old_temp, access_temp("date", hash_table));
+                        loop = false;
+                        break;
+                    }
+                }
+
+            case 3:
+                {
+                    float temp = access_temp(date, hash_table);
+                    if(temp==200)
+                    {
+                        printf("error\n");
+                        loop = true;
+                        continue;
+                    }
+                    int res = delete_measurement(date, hash_table);
+                    if(res==-1)
+                    {
+                        printf("error\n");
+                        loop = true;
+                        #ifdef __linux__
+                            system("clear");
+                        #endif
+                        continue;
+                    }
+                    else
+                    {
+                        printf("The measurement on %s when the temperature was %.2f was deleted", date, temp);
+                        loop = false;
+                        break;
+                    }
+                }
+            case 4:
+                printf("Exiting...\n");
+                loop = false;
+                #ifdef __linux__
+                    system("clear");
+                #endif
+                break;
+
+        }
     }
+    while(loop);
+
     return 0;
 }
