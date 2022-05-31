@@ -126,6 +126,19 @@ int compare_dates(char date1_s[], char date2_s[])
     }
 }
 
+void clear_console()
+{
+    #ifdef __linux__
+        system("clear");
+    #endif
+    #ifdef _WIN32
+        system("cls");
+    #endif
+    #ifdef __APPLE__
+        system("clear");
+    #endif
+}
+
 int hash_function(node node1)
 {
     char num = 'a';
@@ -321,14 +334,15 @@ int main()
         if((choice != 1) & (choice != 2) & (choice != 3) & (choice != 4))
         {
             loop = true;
-            #ifdef __linux__
-                system("clear");
-            #endif
+            clear_console();
             continue;
         }
         char date[15];
-        if(choice!=4) printf("Enter a date(mm/dd/yy): ");
-        scanf("%s", date);
+        if(choice!=4)
+        {
+            printf("Enter a date(mm/dd/yy): ");
+            scanf("%s", date);
+        }
         switch(choice)
         {
             case 1:
@@ -336,19 +350,40 @@ int main()
                     float temp = access_temp(date, hash_table);
                     if(temp==200)
                     {
-                        printf("error\n");
+                        //printf("error\n");
                         loop = true;
-                        #ifdef __linux__
-                            system("clear");
-                        #endif
+                        clear_console();
                         continue;
                     }
                     else
                     {
-                        printf("The temperature on %s was %.2f",date, temp);
-                        loop = false;
-                        break;
-
+                        printf("The temperature on %s was %.2fC\n",date, temp);
+                        printf("Continue: 1\n");
+                        printf("Exit: 2\n");
+                        char ch;
+                        int choice1 = 0;
+                        printf("Enter your choice: ");
+                        scanf(" %d", &choice1);
+                        while ((getchar()) != '\n');
+                        if((choice1 != 1) & (choice1 != 2))
+                        {
+                            loop = true;
+                            clear_console();
+                            continue;
+                        }
+                        switch(choice1)
+                        {
+                            case 1:
+                                loop = true;
+                                printf("Press Enter to continue...");
+                                scanf("%c", &ch);
+                                clear_console();
+                                continue;
+                            case 2:
+                                printf("Exiting...\n");
+                                loop = false;
+                                continue;
+                        }
 
                     }
                 }
@@ -356,22 +391,45 @@ int main()
                 {
                     float old_temp = access_temp(date, hash_table);
                     float new_temp;
+                    printf("Enter a new temperature: ");
                     scanf("%f", &new_temp);
                     int res = edit_temp(date, new_temp, hash_table);
                     if(res==-1)
                     {
-                        printf("error\n");
+                        //printf("error\n");
                         loop = true;
-                        #ifdef __linux__
-                            system("clear");
-                        #endif
+                        clear_console();
                         continue;
                     }
                     else
                     {
-                        printf("The temperature on %s was changed from %.2f to %.2f\n", date, old_temp, access_temp("date", hash_table));
-                        loop = false;
-                        break;
+                        printf("The temperature on %s was changed from %.2fC to %.2fC\n", date, old_temp, access_temp(date, hash_table));
+                        printf("Continue: 1\n");
+                        printf("Exit: 2\n");
+                        char ch;
+                        int choice1 = 0;
+                        printf("Enter your choice: ");
+                        scanf(" %d", &choice1);
+                        while ((getchar()) != '\n');
+                        if((choice1 != 1) & (choice1 != 2))
+                        {
+                            loop = true;
+                            clear_console();
+                            continue;
+                        }
+                        switch(choice1)
+                        {
+                            case 1:
+                                loop = true;
+                                printf("Press Enter to continue...");
+                                scanf("%c", &ch);
+                                clear_console();
+                                continue;
+                            case 2:
+                                printf("Exiting...\n");
+                                loop = false;
+                                continue;
+                        }
                     }
                 }
 
@@ -387,26 +445,45 @@ int main()
                     int res = delete_measurement(date, hash_table);
                     if(res==-1)
                     {
-                        printf("error\n");
+                        //printf("error\n");
                         loop = true;
-                        #ifdef __linux__
-                            system("clear");
-                        #endif
+                        clear_console();
                         continue;
                     }
                     else
                     {
-                        printf("The measurement on %s when the temperature was %.2f was deleted", date, temp);
-                        loop = false;
-                        break;
+                        printf("The measurement on %s when the temperature was %.2f was deleted\n", date, temp);
+                        printf("Continue: 1\n");
+                        printf("Exit: 2\n");
+                        char ch;
+                        int choice1 = 0;
+                        printf("Enter your choice: ");
+                        scanf(" %d", &choice1);
+                        while ((getchar()) != '\n');
+                        if((choice1 != 1) & (choice1 != 2))
+                        {
+                            loop = true;
+                            clear_console();
+                            continue;
+                        }
+                        switch(choice1)
+                        {
+                            case 1:
+                                loop = true;
+                                printf("Press Enter to continue...");
+                                scanf("%c", &ch);
+                                clear_console();
+                                continue;
+                            case 2:
+                                printf("Exiting...\n");
+                                loop = false;
+                                continue;
+                        }
                     }
                 }
             case 4:
                 printf("Exiting...\n");
                 loop = false;
-                #ifdef __linux__
-                    system("clear");
-                #endif
                 break;
 
         }
