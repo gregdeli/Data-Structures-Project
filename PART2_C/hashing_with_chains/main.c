@@ -393,6 +393,17 @@ int main()
                     float new_temp;
                     printf("Enter a new temperature: ");
                     scanf("%f", &new_temp);
+                    while ((getchar()) != '\n');
+                    if(new_temp>=100)
+                    {
+                        loop = true;
+                        printf("The temperature of the water can't be over 100C\n");
+                        printf("Press Enter to continue...");
+                        char ch = 'a';
+                        scanf("%c", &ch);
+                        clear_console();
+                        continue;
+                    }
                     int res = edit_temp(date, new_temp, hash_table);
                     if(res==-1)
                     {

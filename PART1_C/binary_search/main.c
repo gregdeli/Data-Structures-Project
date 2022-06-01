@@ -15,6 +15,19 @@ typedef struct date{
     int year;
 }date;
 
+void clear_console()
+{
+    #ifdef __linux__
+        system("clear");
+    #endif
+    #ifdef _WIN32
+        system("cls");
+    #endif
+    #ifdef __APPLE__
+        system("clear");
+    #endif
+}
+
 void print_measurments(measurements values[])
 {
     for(int i=0; i<1405; i++)
@@ -165,15 +178,16 @@ int main()
             while ((getchar()) != '\n'); //reads input buffer until the end and discards them including newline
             if((choice != 1)&(choice != 2))
             {
-                system("cls");
+                clear_console();
                 continue;
             }
             switch(choice)
             {
                 case 1:
-                    system("cls"); //works only on windows
+                    clear_console();
                     continue;
                 case 2:
+                    printf("Exiting...");
                     return 0;
 
             }
@@ -191,13 +205,13 @@ int main()
         while ((getchar()) != '\n');
         if((choice != 1) & (choice != 2) & (choice != 3) & (choice != 4) & (choice != 5))
         {
-            system("cls");
+            clear_console();
             continue;
         }
         switch(choice)
         {
             case 1:
-                printf("The temperature on %s was %s\n", date, values[index].temp);
+                printf("The temperature on %s was %sC\n", date, values[index].temp);
                 loop = true;
                 break;
 
@@ -207,13 +221,13 @@ int main()
                 break;
 
             case 3:
-                printf("The temperature on %s was %s C and the phosphate reading was %s\n", date, values[index].temp, values[index].phosphate);
+                printf("The temperature on %s was %sC and the phosphate reading was %s\n", date, values[index].temp, values[index].phosphate);
                 loop = true;
                 break;
 
             case 4:
                 loop = true;
-                system("cls"); //works only on windows
+                clear_console();
                 continue;
             case 5:
                 printf("Exiting...\n");
@@ -222,9 +236,11 @@ int main()
         }
         if(loop)
         {
-            printf("\nPress any key to continue...");
-            getch();
-            system("cls"); //works only on windows
+            char ch = 'a';
+            printf("Press Enter to continue...");
+            scanf("%c", &ch);
+            clear_console();
+            continue;
         }
 
     }

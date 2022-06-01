@@ -15,6 +15,19 @@ typedef struct date{
     int year;
 }date;
 
+void clear_console()
+{
+    #ifdef __linux__
+        system("clear");
+    #endif
+    #ifdef _WIN32
+        system("cls");
+    #endif
+    #ifdef __APPLE__
+        system("clear");
+    #endif
+}
+
 date dateString_to_dateStruct(char date1_s[])
 {
     date date1; //make 2 date structs
@@ -95,7 +108,7 @@ int countLeapYears(date d)
     if (d.month <= 2)
         years--;
 
-    // An year is a leap year if it
+    // A year is a leap year if it
     // is a multiple of 4,
     // multiple of 400 and not a
      // multiple of 100.
@@ -104,8 +117,8 @@ int countLeapYears(date d)
            + years / 400;
 }
 
-// This function returns number of
-// days between two given dates
+// h synartisi ypologizei ton arithmo twn hmerwn apo to 0 mexri to date1 kai apo to 0 mexri to date2
+//kai epistrefei thn diafora tous
 int subtract_dates(char date1_s[], char date2_s[])
 {
     date dt1;
@@ -127,8 +140,7 @@ int subtract_dates(char date1_s[], char date2_s[])
     // Add a day for every leap year
     n1 += countLeapYears(dt1);
 
-    // SIMILARLY, COUNT TOTAL NUMBER OF
-    // DAYS BEFORE 'dt2'
+    // omoiws gia to date2
 
     long int n2 = dt2.year * 365 + dt2.day;
     for (int i = 0; i < dt2.month- 1; i++)
@@ -136,11 +148,11 @@ int subtract_dates(char date1_s[], char date2_s[])
     n2 += countLeapYears(dt2);
 
     // return difference between two counts
-    if(compare_dates(date1_s, date2_s)==1)
+    if(compare_dates(date1_s, date2_s)==1) //if date1>date2
     {
         return (n1-n2);
     }
-    else if(compare_dates(date1_s, date2_s)==-1)
+    else if(compare_dates(date1_s, date2_s)==-1) //if date1<date2
     {
         return (n2-n1);
     }
@@ -246,15 +258,16 @@ int main()
             while ((getchar()) != '\n');//reads input buffer until the end and discards them including newline
             if((choice != 1)&(choice != 2))
             {
-                system("cls");
+                clear_console();
                 continue;
             }
             switch(choice)
             {
                 case 1:
-                    system("cls"); //works only on windows
+                    clear_console(); //works only on windows
                     continue;
                 case 2:
+                    printf("Exiting...");
                     return 0;
 
             }
@@ -272,13 +285,13 @@ int main()
         while ((getchar()) != '\n');
         if((choice != 1) & (choice != 2) & (choice != 3) & (choice != 4) & (choice != 5))
         {
-            system("cls");
+            clear_console();
             continue;
         }
         switch(choice)
         {
             case 1:
-                printf("The temperature on %s was %s\n", date, values[index].temp);
+                printf("The temperature on %s was %sC\n", date, values[index].temp);
                 loop = true;
                 break;
 
@@ -288,13 +301,13 @@ int main()
                 break;
 
             case 3:
-                printf("The temperature on %s was %s C and the phosphate reading was %s\n", date, values[index].temp, values[index].phosphate);
+                printf("The temperature on %s was %sC and the phosphate reading was %s\n", date, values[index].temp, values[index].phosphate);
                 loop = true;
                 break;
 
             case 4:
                 loop = true;
-                system("cls"); //works only on windows
+                clear_console(); //works only on windows
                 continue;
             case 5:
                 printf("Exiting...\n");
@@ -303,9 +316,11 @@ int main()
         }
         if(loop)
         {
-            printf("\nPress any key to continue...");
-            getch();
-            system("cls"); //works only on windows
+            char ch = 'a';
+            printf("Press Enter to continue...");
+            scanf("%c", &ch);
+            clear_console();
+            continue;
         }
 
     }
