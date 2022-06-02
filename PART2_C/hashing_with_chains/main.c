@@ -342,6 +342,13 @@ int main()
         {
             printf("Enter a date(mm/dd/yy): ");
             scanf("%s", date);
+            while ((getchar()) != '\n'); //clear input
+            if(access_temp(date, hash_table)==200)
+            {
+                loop = true;
+                clear_console();
+                continue;
+            }
         }
         switch(choice)
         {
@@ -350,7 +357,6 @@ int main()
                     float temp = access_temp(date, hash_table);
                     if(temp==200)
                     {
-                        //printf("error\n");
                         loop = true;
                         clear_console();
                         continue;
