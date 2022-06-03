@@ -392,7 +392,13 @@ int main()
                     float old_temp = access_temp(date, hash_table);
                     float new_temp;
                     printf("Enter a new temperature: ");
-                    scanf("%f", &new_temp);
+                    if(scanf("%f", &new_temp)!=1)
+                    {
+                        printf("\n");
+                        loop = true;
+                        clear_console();
+                        continue;
+                    }
                     while ((getchar()) != '\n');
                     if(new_temp>=100)
                     {
@@ -407,7 +413,6 @@ int main()
                     int res = edit_temp(date, new_temp, hash_table);
                     if(res==-1)
                     {
-                        //printf("error\n");
                         loop = true;
                         clear_console();
                         continue;
