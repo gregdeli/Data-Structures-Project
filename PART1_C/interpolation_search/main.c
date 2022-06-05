@@ -30,7 +30,7 @@ void clear_console()
 
 date dateString_to_dateStruct(char date1_s[])
 {
-    date date1; //make 2 date structs
+    date date1;
     char temp_date1[20]; //cant use strtok() on the original date string because it will change it
     strcpy(temp_date1,date1_s);
     char *temp1 = strtok(temp_date1, "/"); //seperate month/day/year with strtok()
