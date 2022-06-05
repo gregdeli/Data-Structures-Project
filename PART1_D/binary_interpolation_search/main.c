@@ -452,10 +452,12 @@ int main()
                 break;
 
             case 2:
+                loop = true;
                 printf("The phosphate reading on %s was %s\n", date, values[index].phosphate);
                 break;
 
             case 3:
+                loop = true;
                 printf("The temperature on %s was %sC and the phosphate reading was %s\n", date, values[index].temp, values[index].phosphate);
                 break;
 
