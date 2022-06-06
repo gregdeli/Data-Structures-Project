@@ -165,15 +165,16 @@ int binary_interpolation_search(measurements arr[], int left, int right, char x[
     if(compare_dates(x, arr[left].date)==-1 || compare_dates(x, arr[right].date)==1) // if(x<arr[left].date) or if(x>arr[right].date)
         return -1;                                                                   // for safety
     int result = -2;
-    int size = right-left+1;
+    //int size = right-left+1;
     int sub1 = subtract_dates(x ,arr[left].date);
     int sub2 = subtract_dates(arr[right].date ,arr[left].date);
-    int next =((size) * sub1 / sub2);
+    //int next =((size) * sub1 / sub2);
+    int next = (sub1*(right-left)/sub2) + left;
     result = compare_dates(x, arr[next].date);
     while(result==1 || result==-1)
     {
         int i = 1;
-        size = right - left + 1;
+        int size = right - left + 1;
         if(result == 1 || result == 0) //if x >= arr[next].date
         {
             int pos = next+i*sqrt(size);
@@ -206,7 +207,8 @@ int binary_interpolation_search(measurements arr[], int left, int right, char x[
             return left;
         sub1 = subtract_dates(x ,arr[left].date);
         sub2 = subtract_dates(arr[right].date ,arr[left].date);
-        next = left + ((right-left+1) * sub1 / sub2);
+        //next = left + ((right-left+1) * sub1 / sub2);
+        next = (sub1*(right-left)/sub2) + left;
         result = compare_dates(x, arr[next].date);
     }
     result = compare_dates(x, arr[next].date);
@@ -223,44 +225,46 @@ int binary_interpolation_search_improved(measurements arr[], int left, int right
     int size = right-left+1;
     int sub1 = subtract_dates(x ,arr[left].date);
     int sub2 = subtract_dates(arr[right].date ,arr[left].date);
-    int next =((size) * sub1 / sub2);
+    //int next =((size) * sub1 / sub2);
+    int next = (sub1*(right-left)/sub2) + left;
     result = compare_dates(x, arr[next].date);
     int i = 1;
     if(result == 1 || result == 0) //if x >= arr[next].date
+    {
+        int pos = next + i*sqrt(size);
+        int res = compare_dates(x, arr[pos].date);
+        while(res == 1) //while x>arr[pos].date
         {
-            int pos = next + i*sqrt(size);
-            int res = compare_dates(x, arr[pos].date);
-            while(res == 1) //while x>arr[pos].date
-            {
-                i = 2*i;
-                pos = next+i*sqrt(size);
-                res = compare_dates(x, arr[pos].date);
-                if(res==1) i++;
-            }
-            right = next + i*sqrt(size);
-            left = next + (i-1)*sqrt(size);
+            i = 2*i;
+            pos = next+i*sqrt(size);
+            res = compare_dates(x, arr[pos].date);
+            if(res==1) i++;
         }
-        if(result == -1) //if x < arr[next].date
+        right = next + i*sqrt(size);
+        left = next + (i-1)*sqrt(size);
+    }
+    if(result == -1) //if x < arr[next].date
+    {
+        int pos = next-i*sqrt(size);;
+        int res = compare_dates(x, arr[pos].date);
+        while(res == -1)
         {
-            int pos = next-i*sqrt(size);;
-            int res = compare_dates(x, arr[pos].date);
-            while(res == -1)
-            {
-                i = 2*i;
-                pos = next-i*sqrt(size);
-                res = compare_dates(x, arr[pos].date);
-                if(res==1) i++;
-            }
-                right = next - (i-1)*sqrt(size);
-                left = next - i*sqrt(size);
+            i = 2*i;
+            pos = next-i*sqrt(size);
+            res = compare_dates(x, arr[pos].date);
+            if(res==1) i++;
         }
+            right = next - (i-1)*sqrt(size);
+            left = next - i*sqrt(size);
+    }
         if(compare_dates(x, arr[right].date)==0)
             return right;
         if(compare_dates(x, arr[left].date)==0)
             return left;
         sub1 = subtract_dates(x ,arr[left].date);
         sub2 = subtract_dates(arr[right].date ,arr[left].date);
-        next = left + ((right-left+1) * sub1 / sub2);
+        //next = left + ((right-left+1) * sub1 / sub2);
+        next = (sub1*(right-left)/sub2) + left;
         result = compare_dates(x, arr[next].date);
     //after I find the sub-array that contains date x i do normal binary interpolation
     if(result != 0)
