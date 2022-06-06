@@ -1,7 +1,8 @@
+    #include <time.h>
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
-    #include <time.h>
+
     typedef struct date{
         int month;
         int day;
@@ -34,8 +35,8 @@
         measurements values[1405];
         int i=0;
 
-        while(fgets(buff1,sizeof(buff1),file))
-    {
+         while(fgets(buff1,sizeof(buff1),file))
+        {
         field_count=0;
         row_count++;
         if(row_count == 1)
@@ -65,26 +66,29 @@
                 field_count++;
             }
             i++;
-    }
+        }
         fclose(file);
 
-   clock_t start_t, end_t;
+
+
+clock_t start_t, end_t;
 
 
    start_t = clock();
-   Insertion_Sort2(values);
+   Quick_Sort2(values,0,1404);
    end_t = clock();
 
-        //printMeasurments(string_values);
 
 
-      printMeasurments2(values);
-      //Output_File(values,"Output_Insertion_Sort.csv");
+
+
+     printMeasurments2(values);
+
 
             //functions in order to print the string data struct or the float_string data struct.
 
 
-            file = fopen("Output_InsertionSort.csv" ,"w");
+           file = fopen("Output_QuickSort.csv" ,"w");
         if(file==NULL)
         {
             printf("Error");
@@ -97,12 +101,12 @@
             fprintf(file, "%s,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\n", values[i].date, values[i].temp, values[i].phosphate, values[i].silicate, values[i].nitrite, values[i].nitrate, values[i].salinity, values[i].oxygen);
         }
         fclose(file);
-        printf("Starting the Insertion_Sort at, start_t = %ld\n", start_t);
-        printf("End of the big loop, end_t = %ld\n", end_t);
+printf("Starting of the QuickSort, start_t = %ld\n", start_t);
+printf("End of the QuickSort, end_t = %ld\n", end_t);
 
-        double total_t = (double)(end_t - start_t)/CLOCKS_PER_SEC;
-        printf("Time taken: %fs\n", total_t);
-        return 0;
+double total_t = (double)(end_t - start_t)/CLOCKS_PER_SEC;
+   printf("Time taken: %fs\n", total_t);
+          return 0;
     }
 
 
@@ -116,49 +120,43 @@
            //printf("%.2f\n",values[i].temp2);
         }
     }
-    void Insertion_Sort2(measurements values[]){
-    for(int i=0; i<1404; i++)
+    void Quick_Sort2(measurements values[],int nleft,int nright){
+
+float pivot=values[1404].temp;
+
+if (nleft<nright)
+    {
+    float pivot1 = values[nright].temp; //We set the pivot as the last element
+    int i = (nleft - 1); // We use i to point out the element that is smaller in a partition and to also indicate
+                         // the right position of our pivot
+
+    for (int j = nleft; j <= nright - 1; j++)
+    {
+        if (values[j].temp< pivot1)//If the element j that we are currently looking is smaller than the pivot
         {
-
-           if(values[i+1].temp<values[i].temp) //if the next element is smaller than the previous go inside the if
-           {
-
-               for(int y=0; y<i+1; y++)       //now we need to see where we need to put the i+1 element
-               {
-
-                   if(values[i+1].temp<values[y].temp) //if the i+1 element is smaller than y element then we have to insert it to y location
-                   {                                                 //we start for y=0 cause we want to start from the element 0 and find --
-                                                                     //-- the first element that is bigger than the i+1 in order to insert it there.
-                       measurements g1=values[i+1];
-                       float g=values[i+1].temp;               //we set  the whole i+1 struct as a temp struct called g1
-                                                                      //we also set the i+1 temperature as a temp value called g
-
-                       for(int z=i; z>=0; z--)
-                        {
-                            if(values[z].temp<g)                //we use a break in order to stop moving our elements 1 location further ---
-                                break;                                 //---- We need to stop cause we want to move 1 location further only the part of the array ---
-                                                                       //--- is bigger than the i+1 element
+            i++;
 
 
-                        values[z+1]=values[z];               //we need to move the bigger elements 1 location further
 
-
-                        }
-                       values[y]=g1;                               //we insert our i+1 element to the y location
-
-                   }
-
-               }
-
-           }
+    measurements temp=values[i];
+    values[i]=values[j]; //we swap the smaller elements to the left and the biggest to the right
+    values[j]=temp;
 
         }
-        for(int i=0; i<1404; i++)
+    }
+    measurements temp1=values[i+1];
+    values[i+1]=values[nright]; //We swap the pivot with the i+1 element because the partition of the values before the i is sorted.
+    values[nright]=temp1;
+
+    Quick_Sort2(values,nleft,i); //We now have to sort the other partitions
+    Quick_Sort2(values,i+2,nright);
+    }
+    for(int i=0; i<1404; i++)
         {
             if(values[i].temp==values[i+1].temp){
         if(compare_datesSort(values[i].date,values[i+1].date)==1)
            {
-               measurements v1=values[i];
+              measurements v1=values[i];
                measurements v2=values[i+1];
                values[i]=v2;
                values[i+1]=v1;
@@ -230,4 +228,35 @@
                   return 0;
         }
     }
+
+void QuickSort(int array[],int nleft,int nright)
+{
+    if (nleft<nright)
+    {
+    int pivot1 = array[nright]; //We set the pivot as the last element
+    int i = (nleft - 1); // We use i to point out the element that is smaller in a partition and to also indicate
+                         // the right position of our pivot
+
+    for (int j = nleft; j <= nright - 1; j++)
+    {
+        if (array[j] < pivot1)//If the element j that we are currently looking is smaller than the pivot
+        {
+            i++;
+
+    int temp=array[i];
+    array[i]=array[j]; //we swap the smaller elements to the left and the biggest to the right
+    array[j]=temp;
+
+        }
+    }
+    int temp1=array[i+1];
+    array[i+1]=array[nright]; //We swap the pivot with the i+1 element because the partition of the array before the i is sorted.
+    array[nright]=temp1;
+
+    QuickSort(array,nleft,i); //We now have to sort the other partitions
+    QuickSort(array,i+2,nright);
+    }
+}
+
+/* Function to print an arrayay */
 

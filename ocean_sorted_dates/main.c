@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 
 typedef struct measurements{
     char date[20],temp[10], phosphate[10];
@@ -103,11 +104,14 @@ void bubble_sort(measurements arr[], int size)
 {
    int i, j;
    for (i = 0; i < size-1; i++)
-
+    {
        // Last i elements are already in place
        for (j = 0; j < size-i-1; j++)
+       {
            if (compare_dates(arr[j].date, arr[j+1].date)==1) //if(arr[j].date>arr[j+1].date)
               swap(&arr[j], &arr[j+1]);
+       }
+    }
 }
 
 int main()
@@ -162,9 +166,13 @@ int main()
 
     }
     fclose(file);
-
+    clock_t start = clock();
     bubble_sort(values, size_of_values);
-    print_measurments(values, size_of_values);
+    clock_t end = clock();
+    double time = (double) (end-start) / CLOCKS_PER_SEC;
+
+    //print_measurments(values, size_of_values);
+    printf("The bubble sort algorithm took %f secs to execute", time);
 
     //write the sorted values by date onto a new file ocean_sorted_by_dates.csv
     file = fopen("ocean_sorted_dates.csv" ,"w");

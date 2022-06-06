@@ -166,15 +166,15 @@ int interpolation_search(measurements arr[], int left, int right, char x[])
     // in array must be in range defined by corner
     bool x_grtr_eq_to_arrleft = false; //date x is grater than or equal to arr[left].date
     bool x_smlr_eq_to_arr_right = false; //date x is smaller than or equal to arr[right].date
-    int y = compare_dates(x, arr[left].date);
-    int y1 = compare_dates(x, arr[right].date);
+    int y = compare_dates(x, arr[left].date); //result of comparison between x, arr[left].date
+    int y1 = compare_dates(x, arr[right].date); //result of comparison between x, arr[right].date
     if(y==1 || y==0) x_grtr_eq_to_arrleft = true;
     if(y1==-1 || y1==0) x_smlr_eq_to_arr_right = true;
     if (left <= right && x_grtr_eq_to_arrleft && x_smlr_eq_to_arr_right) {
         // Probing the position with keeping
         // uniform distribution in mind.
-        int sub1 = subtract_dates(x ,arr[left].date);
-        int sub2 = subtract_dates(arr[right].date ,arr[left].date);
+        int sub1 = subtract_dates(x ,arr[left].date); //sub = x-arr[left].date
+        int sub2 = subtract_dates(arr[right].date ,arr[left].date); //sub = arr[left].date-arr[left].date
         next = (sub1*(right-left)/sub2) + left;
 
         // Condition of target found
@@ -189,7 +189,7 @@ int interpolation_search(measurements arr[], int left, int right, char x[])
         if (compare_dates(x, arr[next].date) == -1)  // x < arr[next].date
             return interpolation_search(arr, left, next - 1, x);
     }
-    return -1;
+    return -1; //if I come out of the if statement above there is a problem so return -1
 }
 
 int main()
