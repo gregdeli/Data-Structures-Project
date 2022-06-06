@@ -169,6 +169,7 @@ int binary_interpolation_search(measurements arr[], int left, int right, char x[
     int sub2 = subtract_dates(arr[right].date ,arr[left].date);
     int next = (sub1*(right-left)/sub2) + left;
     result = compare_dates(x, arr[next].date);
+    if(result==0) return next;
     while(result==1 || result==-1)
     {
         int i = 1;
@@ -225,7 +226,8 @@ int binary_interpolation_search_improved(measurements arr[], int left, int right
     int next = (sub1*(right-left)/sub2) + left;
     result = compare_dates(x, arr[next].date);
     int i = 1;
-    if(result == 1 || result == 0) //if x >= arr[next].date
+    if(result==0) return next;
+    if(result == 1) //if x > arr[next].date
     {
         int pos = next + i*sqrt(size);
         int res = compare_dates(x, arr[pos].date);
