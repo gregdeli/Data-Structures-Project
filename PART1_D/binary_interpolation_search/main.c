@@ -230,13 +230,12 @@ int binary_interpolation_search_improved(measurements arr[], int left, int right
         {
             int pos = next + i*sqrt(size);
             int res = compare_dates(x, arr[pos].date);
-            i=0;
             while(res == 1) //while x>arr[pos].date
             {
-                i++;
                 i = 2*i;
                 pos = next+i*sqrt(size);
                 res = compare_dates(x, arr[pos].date);
+                if(res==1) i++;
             }
             right = next + i*sqrt(size);
             left = next + (i-1)*sqrt(size);
@@ -245,14 +244,12 @@ int binary_interpolation_search_improved(measurements arr[], int left, int right
         {
             int pos = next-i*sqrt(size);;
             int res = compare_dates(x, arr[pos].date);
-            i=0;
             while(res == -1)
             {
-                i++;
                 i = 2*i;
                 pos = next-i*sqrt(size);
                 res = compare_dates(x, arr[pos].date);
-                i++;
+                if(res==1) i++;
             }
                 right = next - (i-1)*sqrt(size);
                 left = next - i*sqrt(size);
