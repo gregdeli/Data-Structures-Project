@@ -19,6 +19,15 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="avl_date.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="avl_date.h" />
+		<Unit filename="avl_temp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="avl_temp.h" />
+		<Unit filename="common.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>

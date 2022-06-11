@@ -8,9 +8,11 @@
 int main()
 {
     measurements values[1405];
-    AVL_Node_a *avl=NULL;
-    avl = load_avl_a(values, avl);
-    menu_a(avl); //Function to create the menu
-
+    AVL_Node_a *avl_1=NULL;
+    AVL_Node_b *avl_2=NULL;
+    avl_1 = load_avl_a(values, avl_1);
+    //menu_a(avl_1); //Function to create the menu
+    avl_2 = load_avl_b(values, avl_2);
+    menu_b(avl_2);
     return 0;
 }

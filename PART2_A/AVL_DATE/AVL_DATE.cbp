@@ -19,7 +19,7 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="main.c">
+		<Unit filename="avl_date.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions>

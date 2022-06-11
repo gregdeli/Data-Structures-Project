@@ -198,7 +198,7 @@ struct AVL_Node_b * AVL_creation_b(struct AVL_Node_b* avl_node,char avl_date[50]
                                                      // NULL   NULL
 
         avl_node->node_new_date= (char*)malloc(sizeof(char)*11);
-        avl_node->node_new_date= realloc(avl_node->node_new_date,sizeof(char*)*11);
+        avl_node->node_new_date= realloc(avl_node->node_new_date,sizeof(char*)*12);
     }
 
     else if(avl_key<avl_node->node_key_temp) //if the key we want to insert is smaller than the root then it goes to the left
@@ -498,23 +498,20 @@ void menu_b(struct AVL_Node_b *avl)
     }while(loop);
 }
 
-/*int main()
+AVL_Node_b* load_avl_b(measurements values[], AVL_Node_b *avl)
 {
-
     //Initialization of the file pointer
     FILE *file = fopen("ocean.csv", "r");
     if(!file)
     {
         printf("Error");
-        return 0;
+        exit(0);
     }
 
     char buff1[1024];
     int row_count = 0;
     int field_count =0;
 
-
-    measurements values[1405];
     int i=0;
 
     while(fgets(buff1,sizeof(buff1),file))
@@ -552,27 +549,11 @@ void menu_b(struct AVL_Node_b *avl)
     fclose(file);
 
 
-    AVL_Node *avl=NULL;
-
     for(int i=0; i<1405; i++)
     {
-        avl=AVL_creation_b(avl,values[i].date,values[i].temp); //printf("%.2f\n",values[i].temp2);
+        avl=AVL_creation_b(avl,values[i].date,values[i].temp);
     }
+    return avl;
 
-    menu_b(avl); //Function to create the menu_b
-
-    return 0;
-
-
-}*/
-
-/*void printMeasurments2(measurements values[])
-{
-    for(int i=0; i<1405; i++)
-    {
-    printf("%s %.2f %.2f %.2f ",values[i].date,values[i].temp,values[i].phosphate,values[i].silicate);
-    printf("%.2f %.2f %.2f %.2f\n",values[i].nitrite,values[i].nitrate,values[i].salinity,values[i].oxygen);
-
-    }
-}*/
+}
 
