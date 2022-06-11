@@ -4,55 +4,12 @@
 #include <time.h>
 #include <stdbool.h>
 #include <limits.h>
-
-typedef struct date
-{
-    int month;
-    int day;
-    int year;
-
-}date;
-
-typedef struct AVL_Node   //struct for the node of our avl tree
-{
-
-    struct AVL_Node *node_left;
-    struct AVL_Node *node_right;
-    int height;
-    char node_date[50];
-    float node_key_temp;
-    char *node_new_date;
-
-}AVL_Node;
-
-typedef struct measurements
-{
-    //struct with floats and string only for the date
-    char date[50];
-    float temp, phosphate;
-    float silicate,  nitrite, nitrate;
-    float salinity,  oxygen;
-
-}measurements;
+#include "avl_temp.h"
+#include "common.h"
 
 
-int getheight( AVL_Node *);
-AVL_Node *rotateright(AVL_Node *);                    //We declare the functions that we we will use
-AVL_Node *rotateleft(AVL_Node *);
-AVL_Node *AVL_right_right_rotation(AVL_Node*);
-AVL_Node *AVL_left_left_rotation(AVL_Node *);
-AVL_Node *AVL_left_right_rotation(AVL_Node *);
-AVL_Node *AVL_right_left_rotation(AVL_Node *);
-int getbalance(AVL_Node *);
-void printLevelOrder(AVL_Node*);
-void printMeasurments2(measurements[]);
-void menu(struct AVL_Node *);
-int compare_datesSort(char [], char []);
-AVL_Node *creation(AVL_Node *,char[50],float);
-float maximum(AVL_Node *);
-float minimum(AVL_Node *);
 
-int getbalance(AVL_Node *avl_node) //function to measure balance
+int getbalance_b(AVL_Node_b *avl_node) //function to measure balance
 {
     int right_height,left_height;
     if(avl_node==NULL)
@@ -73,7 +30,7 @@ int getbalance(AVL_Node *avl_node) //function to measure balance
     return(right_height-left_height); //balance = hr-hl
 }
 
-int getheight(AVL_Node *avl_node) //function to get height
+int getheight_b(AVL_Node_b *avl_node) //function to get height
 {
     int right_height,left_height;
 
@@ -96,7 +53,7 @@ int getheight(AVL_Node *avl_node) //function to get height
     return(right_height);
 }
 
-float maximum(struct AVL_Node* avl_node)
+float maximum(struct AVL_Node_b* avl_node)
 {
     if (avl_node == NULL)
     return LONG_MIN;
@@ -115,7 +72,7 @@ float maximum(struct AVL_Node* avl_node)
     return max;
 
 }
-float minimum(struct AVL_Node* avl_node)
+float minimum(struct AVL_Node_b* avl_node)
 {
     if (avl_node==NULL)
     return LONG_MAX;
@@ -135,25 +92,25 @@ float minimum(struct AVL_Node* avl_node)
     return max;
 }
 
-struct AVL_Node *AVL_search(struct AVL_Node* avl_node,float avl_key)
+struct AVL_Node_b *AVL_search_b(struct AVL_Node_b* avl_node,float avl_key)
 {
 
     if((avl_node == NULL) || avl_node->node_key_temp==avl_key) //if the node is the same with the root then return the root
     return avl_node;
 
     if(avl_node->node_key_temp<avl_key)    //if the key of the node is smaller than the given key then you go to the right
-    return AVL_search(avl_node->node_right, avl_key);
+    return AVL_search_b(avl_node->node_right, avl_key);
 
-    return AVL_search(avl_node->node_left, avl_key);  //else you go to the left
+    return AVL_search_b(avl_node->node_left, avl_key);  //else you go to the left
 
 }
 
 
 
-struct AVL_Node *AVL_left_rotation(struct AVL_Node *avl_node)
+struct AVL_Node_b *AVL_left_rotation_b(struct AVL_Node_b *avl_node)
 {
 
-    AVL_Node *newnode;
+    AVL_Node_b *newnode;
     newnode=avl_node->node_right;
 
     avl_node->node_right=newnode->node_left;
@@ -165,13 +122,13 @@ struct AVL_Node *AVL_left_rotation(struct AVL_Node *avl_node)
                                               //            t2  t3              -->      avl_node  t3
                                               //                  \                          /  \    \
                                               //                   t4                      t1   t2    t4
-    avl_node->height=getheight(avl_node);
-    newnode->height=getheight(newnode); //updating the heights
+    avl_node->height=getheight_b(avl_node);
+    newnode->height=getheight_b(newnode); //updating the heights
     return(newnode); //return new root
 
 }
 
-void delay(int number_of_seconds) //function to make a delay. Only for printf(); purposes
+/*void delay(int number_of_seconds) //function to make a delay. Only for printf(); purposes
 {
     // Converting time into milli_seconds
     int milli_seconds = 1000 * number_of_seconds;
@@ -182,12 +139,12 @@ void delay(int number_of_seconds) //function to make a delay. Only for printf();
     // looping till required time is not achieved
     while (clock() < start_time + milli_seconds)
     ;
-}
+}*/
 
-struct AVL_Node *AVL_right_rotation(struct AVL_Node *avl_node)
+struct AVL_Node_b *AVL_right_rotation_b(struct AVL_Node_b *avl_node)
 {
 
-    struct AVL_Node *newnode;
+    struct AVL_Node_b *newnode;
     newnode=avl_node->node_left;                  //right rotation function
     avl_node->node_left=newnode->node_right;      //            avl_node
     newnode->node_right=avl_node;                //             /   \
@@ -196,43 +153,43 @@ struct AVL_Node *AVL_right_rotation(struct AVL_Node *avl_node)
                                               //       t3   t2                -->        t3   avl_node
                                              //      /                                  /      /  \
                                             //     t4                                 t4    t2    t1
-    avl_node->height=getheight(avl_node);
-    newnode->height=getheight(newnode); //updating the heights
+    avl_node->height=getheight_b(avl_node);
+    newnode->height=getheight_b(newnode); //updating the heights
     return (newnode); //return new root
 
 }
 
-struct AVL_Node *AVL_left_left_rotation(struct AVL_Node *avl_node)
+struct AVL_Node_b *AVL_left_left_rotation_b(struct AVL_Node_b *avl_node)
 {
-    avl_node=AVL_right_rotation(avl_node);  //if we have a left left case we need to rotate right
+    avl_node=AVL_right_rotation_b(avl_node);  //if we have a left left case we need to rotate right
     return(avl_node);
 }
 
-struct AVL_Node *AVL_right_right_rotation(struct AVL_Node *avl_node)
+struct AVL_Node_b *AVL_right_right_rotation_b(struct AVL_Node_b *avl_node)
 {
-    avl_node=AVL_left_rotation(avl_node); //if we have a right right case we need to rotate left
+    avl_node=AVL_left_rotation_b(avl_node); //if we have a right right case we need to rotate left
     return(avl_node);
 }
 
-struct AVL_Node *AVL_left_right_rotation(struct AVL_Node *avl_node)
+struct AVL_Node_b *AVL_left_right_rotation_b(struct AVL_Node_b *avl_node)
 {
-    avl_node->node_left=AVL_left_rotation(avl_node->node_left); //if we have a left right case we need to rotate left the left child and then right rotate
-    avl_node=AVL_right_rotation(avl_node);
+    avl_node->node_left=AVL_left_rotation_b(avl_node->node_left); //if we have a left right case we need to rotate left the left child and then right rotate
+    avl_node=AVL_right_rotation_b(avl_node);
     return(avl_node);
 }
 
-struct AVL_Node *AVL_right_left_rotation(struct AVL_Node *avl_node)
+struct AVL_Node_b *AVL_right_left_rotation_b(struct AVL_Node_b *avl_node)
 {
-    avl_node->node_right=AVL_right_rotation(avl_node->node_right); //if we have a right left case we need to rotate right the right child and then left
-    avl_node=AVL_left_rotation(avl_node);
+    avl_node->node_right=AVL_right_rotation_b(avl_node->node_right); //if we have a right left case we need to rotate right the right child and then left
+    avl_node=AVL_left_rotation_b(avl_node);
     return(avl_node);
 }
 
-struct AVL_Node * AVL_creation(struct AVL_Node* avl_node,char avl_date[50],float avl_key) //Function that returns the structs root pointer so we can create
+struct AVL_Node_b * AVL_creation_b(struct AVL_Node_b* avl_node,char avl_date[50],float avl_key) //Function that returns the structs root pointer so we can create
 {                                                                      //the avl tree through binary insertion and rebalancing when needed.
     if(avl_node==NULL) //We crate the Node and set its left and right
     {                 // child nodes to null.
-        avl_node = (struct AVL_Node*)malloc(sizeof(struct AVL_Node));//WE HAVE TO ALLOCATE MEMORY DYNAMICALLY INTO THE HEAP!!!
+        avl_node = (struct AVL_Node_b*)malloc(sizeof(struct AVL_Node_b));//WE HAVE TO ALLOCATE MEMORY DYNAMICALLY INTO THE HEAP!!!
 
         avl_node->node_key_temp=avl_key; //new node has to have null children and its key and temp values
         avl_node->node_right = NULL;
@@ -246,26 +203,26 @@ struct AVL_Node * AVL_creation(struct AVL_Node* avl_node,char avl_date[50],float
 
     else if(avl_key<avl_node->node_key_temp) //if the key we want to insert is smaller than the root then it goes to the left
     {
-        avl_node->node_left = AVL_creation(avl_node->node_left,avl_date,avl_key);
+        avl_node->node_left = AVL_creation_b(avl_node->node_left,avl_date,avl_key);
 
-        if(getbalance(avl_node)==-2) //if the insertion creates any imbalance we have to rebalance our avl tree! if it is -2 then it leans to the left
-        if(avl_key<avl_node->node_left->node_key_temp) // if the key we want to add is smaller than the left child it means it will go to the left
-        avl_node=AVL_left_left_rotation(avl_node);                              //so we just have to do a left left rotation
-        else
-         avl_node=AVL_left_right_rotation(avl_node); // if the key we want to add is greater than the left child it means it will go to the right and it will ruin our tree
+        if(getbalance_b(avl_node)==-2) //if the insertion creates any imbalance we have to rebalance our avl tree! if it is -2 then it leans to the left
+            if(avl_key<avl_node->node_left->node_key_temp) // if the key we want to add is smaller than the left child it means it will go to the left
+                avl_node=AVL_left_left_rotation_b(avl_node);                              //so we just have to do a left left rotation
+            else
+                avl_node=AVL_left_right_rotation_b(avl_node); // if the key we want to add is greater than the left child it means it will go to the right and it will ruin our tree
                                                     //so we just have to do a left right rotation
     }
 
 
     else if(avl_key>avl_node->node_key_temp)
     {
-        avl_node->node_right = AVL_creation(avl_node->node_right,avl_date,avl_key);
+        avl_node->node_right = AVL_creation_b(avl_node->node_right,avl_date,avl_key);
 
-        if(getbalance(avl_node)==2) //if the insertion creates any imbalance we have to rebalance our avl tree! if it is 2 then it leans to the right
+        if(getbalance_b(avl_node)==2) //if the insertion creates any imbalance we have to rebalance our avl tree! if it is 2 then it leans to the right
         if(avl_key> avl_node->node_right->node_key_temp)// if the key we want to add is greater than the right child it means it will go to the right
-        avl_node=AVL_right_right_rotation(avl_node); //so we just have to do a right right rotation
+        avl_node=AVL_right_right_rotation_b(avl_node); //so we just have to do a right right rotation
         else
-         avl_node=AVL_right_left_rotation(avl_node); // if the key we want to add is smaller than the right child it means it will go to the left and it will ruin our tree
+         avl_node=AVL_right_left_rotation_b(avl_node); // if the key we want to add is smaller than the right child it means it will go to the left and it will ruin our tree
                                                      //so we just have to do a right left rotation
 
     }
@@ -277,7 +234,7 @@ struct AVL_Node * AVL_creation(struct AVL_Node* avl_node,char avl_date[50],float
 
     }
 
-        avl_node->height=getheight(avl_node); //we update heights
+        avl_node->height=getheight_b(avl_node); //we update heights
 
     return(avl_node);
 
@@ -286,7 +243,7 @@ struct AVL_Node * AVL_creation(struct AVL_Node* avl_node,char avl_date[50],float
 }
 
 
-void menu(struct AVL_Node *avl)
+void menu_b(struct AVL_Node_b *avl)
 {
 
     int input,input1,input6,input9,input10;
@@ -342,7 +299,7 @@ void menu(struct AVL_Node *avl)
                 printf("Reading ocean.csv...");
                 for (int i = 0; i < 3; i++)
                 delay(1);
-                printf("\nWhen the ocean had the MINIMUM temperature of %.2f it was %s, %s",minimum(avl),AVL_search(avl,minimum(avl))->node_date,AVL_search(avl,minimum(avl))->node_new_date);
+                printf("\nWhen the ocean had the MINIMUM temperature of %.2f it was %s, %s",minimum(avl),AVL_search_b(avl,minimum(avl))->node_date,AVL_search_b(avl,minimum(avl))->node_new_date);
 
 
                 printf("\n1.Back");
@@ -361,7 +318,7 @@ void menu(struct AVL_Node *avl)
                         loop3=false;
                         loop4=false;
 
-                        menu(avl);
+                        menu_b(avl);
                         break;
 
                         case 2:
@@ -394,7 +351,7 @@ void menu(struct AVL_Node *avl)
                 printf("Reading ocean.csv...");
                 for (int i = 0; i < 3; i++)
                 delay(1);
-                printf("\nWhen the ocean had the MAXIMUM temperature of %.2f it was %s, %s",maximum(avl),AVL_search(avl,maximum(avl))->node_date,AVL_search(avl,maximum(avl))->node_new_date);
+                printf("\nWhen the ocean had the MAXIMUM temperature of %.2f it was %s, %s",maximum(avl),AVL_search_b(avl,maximum(avl))->node_date,AVL_search_b(avl,maximum(avl))->node_new_date);
                 printf("\n\n1.Back");
                 printf("\n2.Exit");
                 do{
@@ -411,7 +368,7 @@ void menu(struct AVL_Node *avl)
                         loop3=false;
                         loop4=false;
 
-                        menu(avl);
+                        menu_b(avl);
                         break;
 
                         case 2:
@@ -439,7 +396,7 @@ void menu(struct AVL_Node *avl)
                 loop2=false;
                 loop3=false;
                 loop4=false;
-                menu(avl);
+                menu_b(avl);
                 break;
 
                 case 4:
@@ -474,9 +431,9 @@ void menu(struct AVL_Node *avl)
         scanf("%f",&input2);
         while((getchar()) != '\n');
         printf("\n");
-        if(AVL_search(avl,input2)==NULL)
+        if(AVL_search_b(avl,input2)==NULL)
         printf("The temp %.2f does not exist!!\n",input2);
-        else printf("\nWhen the ocean had %.2f temperature it was %s, %s",input2,AVL_search(avl,input2)->node_date,AVL_search(avl,input2)->node_new_date);
+        else printf("\nWhen the ocean had %.2f temperature it was %s, %s",input2,AVL_search_b(avl,input2)->node_date,AVL_search_b(avl,input2)->node_new_date);
 
 
 
@@ -496,7 +453,7 @@ void menu(struct AVL_Node *avl)
                 loop3=false;
                 loop4=false;
 
-                menu(avl);
+                menu_b(avl);
                 break;
 
                 case 2:
@@ -541,7 +498,7 @@ void menu(struct AVL_Node *avl)
     }while(loop);
 }
 
-int main()
+/*int main()
 {
 
     //Initialization of the file pointer
@@ -599,17 +556,17 @@ int main()
 
     for(int i=0; i<1405; i++)
     {
-        avl=AVL_creation(avl,values[i].date,values[i].temp); //printf("%.2f\n",values[i].temp2);
+        avl=AVL_creation_b(avl,values[i].date,values[i].temp); //printf("%.2f\n",values[i].temp2);
     }
 
-    menu(avl); //Function to create the menu
+    menu_b(avl); //Function to create the menu_b
 
     return 0;
 
 
-}
+}*/
 
-void printMeasurments2(measurements values[])
+/*void printMeasurments2(measurements values[])
 {
     for(int i=0; i<1405; i++)
     {
@@ -617,4 +574,5 @@ void printMeasurments2(measurements values[])
     printf("%.2f %.2f %.2f %.2f\n",values[i].nitrite,values[i].nitrate,values[i].salinity,values[i].oxygen);
 
     }
-}
+}*/
+

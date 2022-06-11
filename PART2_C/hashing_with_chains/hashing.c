@@ -28,6 +28,18 @@ typedef struct date{
     int year;
 }date;
 
+void delay(int number_of_seconds) //function to make a delay
+{
+    // Converting time into milli_seconds
+    int milli_seconds = 1000 * number_of_seconds;
+
+    // Storing start time
+    clock_t start_time = clock();
+
+    // looping till required time is not achieved
+    while (clock() < start_time + milli_seconds);
+}
+
 
 void read_file(FILE *file, measurements values[])
 {
@@ -282,42 +294,8 @@ node measurement_to_node(measurements m)
     return n;
 }
 
-
-
-int main()
+void menu(node hash_table[])
 {
-    FILE *file = fopen("ocean.csv", "r");
-    measurements values[1405];
-    read_file(file, values);
-    int size = sizeof(values)/sizeof(values[0]);
-    node hash_table[11]; //because h(node) = ... mod11
-    //initialize hash table with node that have an impossible temp value so that we can check later if hash_table[i] "is empty"
-    node initial_node;
-    initial_node.temp = 200;
-    for(int i=0; i<11; i++)
-        {hash_table[i] = initial_node;}
-    //build node array an array with all the measurments in node form so that each node is in a different place in memory
-    node node_array[size];
-    for(int i=0; i<size; i++)
-        node_array[i] = measurement_to_node(values[i]);
-    //build_hash_table
-    for(int i=0; i<size; i++)
-        {insert(&node_array[i], hash_table);}
-    /*//testing
-    float temp = access_temp("01/09/2000", hash_table);
-    if(temp==200) {printf("error\n");}
-    else {printf("%.2f\n", temp);}
-    int res = edit_temp("01/09/2000", 69.01, hash_table);
-    if(res==-1) {printf("error\n");}
-    else {printf("%.2f\n", access_temp("01/09/2000", hash_table));}
-    res = delete_measurement("02/13/2003", hash_table);
-    if(res==-1) {printf("error\n");}
-    else
-    {
-        temp = access_temp("02/14/2003", hash_table);
-        if(temp==200) {printf("error\n");}
-        else {printf("%.2f\n", temp);}
-    }*/
     //menu
     int choice = 0;
     bool loop;
@@ -462,7 +440,6 @@ int main()
                     int res = delete_measurement(date, hash_table);
                     if(res==-1)
                     {
-                        //printf("error\n");
                         loop = true;
                         clear_console();
                         continue;
@@ -506,6 +483,30 @@ int main()
         }
     }
     while(loop);
+}
+
+int main()
+{
+    FILE *file = fopen("ocean.csv", "r");
+    measurements values[1405];
+    read_file(file, values);
+    int size = sizeof(values)/sizeof(values[0]);
+    node hash_table[11]; //because h(node) = ... mod11
+    //initialize hash table with node that have an impossible temp value so that we can check later if hash_table[i] "is empty"
+    node initial_node;
+    initial_node.temp = 200;
+    for(int i=0; i<11; i++)
+        {hash_table[i] = initial_node;}
+    //build node array an array with all the measurments in node form so that each node is in a different place in memory
+    node node_array[size];
+    for(int i=0; i<size; i++)
+        node_array[i] = measurement_to_node(values[i]);
+    //build hash table
+    for(int i=0; i<size; i++)
+        insert(&node_array[i] ,hash_table);
+
+    //menu
+    menu(hash_table);
 
     return 0;
 }

@@ -1,11 +1,10 @@
 # depslib dependency file v1.0
-1654799521 source:c:\users\greg\documents\github\data_structures_project\part2_a_b_c\avl_hashing\main.c
+1654957761 source:c:\users\greg\documents\github\data_structures_project\part2_a_b_c\avl_hashing\main.c
 	<stdio.h>
 	<stdlib.h>
-	<string.h>
-	<time.h>
-	<stdbool.h>
-	<limits.h>
+	"avl_date.h"
+	"avl_temp.h"
+	"common.h"
 
 1654799521 source:c:\users\greg\documents\github\data_structures_project\part2_a_b_c\avl_hashing\aaaa.c
 	<stdio.h>
@@ -15,11 +14,56 @@
 	<stdbool.h>
 	<limits.h>
 
-1654799521 source:c:\users\greg\documents\github\data_structures_project\part2_a_b_c\avl_hashing\avl_hashing.c
+1654951389 source:c:\users\greg\documents\github\data_structures_project\part2_a_b_c\avl_hashing\avl_hashing.c
+	<stdio.h>
+	<stdlib.h>
+
+1654946943 source:c:\users\greg\documents\github\data_structures_project\part2_a\avl_date\avl_date.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	<stdbool.h>
+
+1654951188 source:c:\users\greg\documents\github\data_structures_project\part2_b\avl_temp\avl_temp.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	<time.h>
 	<stdbool.h>
 	<limits.h>
+
+1654946560 source:c:\users\greg\documents\github\data_structures_project\part2_c\hashing_with_chains\hashing.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdbool.h>
+	<time.h>
+	<math.h>
+
+1654957406 source:c:\users\greg\documents\github\data_structures_project\part2_a_b_c\avl_hashing\avl_temp.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	<stdbool.h>
+	<limits.h>
+	"avl_temp.h"
+	"common.h"
+
+1654958740 source:c:\users\greg\documents\github\data_structures_project\part2_a_b_c\avl_hashing\avl_date.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	<stdbool.h>
+	"avl_date.h"
+	"common.h"
+
+1654958763 c:\users\greg\documents\github\data_structures_project\part2_a_b_c\avl_hashing\avl_date.h
+	"common.h"
+
+1654957521 c:\users\greg\documents\github\data_structures_project\part2_a_b_c\avl_hashing\avl_temp.h
+
+1654957331 c:\users\greg\documents\github\data_structures_project\part2_a_b_c\avl_hashing\common.h
 

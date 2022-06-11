@@ -3,54 +3,12 @@
 #include <string.h>
 #include <time.h>
 #include <stdbool.h>
-
-typedef struct date
-{
-
-    int month;
-    int day;
-    int year;
-
-}date;
-
-typedef struct AVL_Node   //struct for the node of our avl tree
-{
-    struct AVL_Node *node_left;
-    struct AVL_Node *node_right;
-    int height;
-    char node_key_date[50];
-    float node_temp;
-}AVL_Node;
-
-typedef struct measurements{ //struct with floats and string only for the date
-
-    char date[50];
-    float temp, phosphate;
-    float silicate,  nitrite, nitrate;
-    float salinity,  oxygen;
-
-}measurements;
-
-
-void printInorder(AVL_Node *);
-int getheight( AVL_Node *);
-AVL_Node *rotateright(AVL_Node *);                    //We declare the functions that we we will use
-AVL_Node *rotateleft(AVL_Node *);
-AVL_Node *AVL_right_right_rotation(AVL_Node*);
-AVL_Node *AVL_left_left_rotation(AVL_Node *);
-AVL_Node *AVL_left_right_rotation(AVL_Node *);
-AVL_Node *AVL_right_left_rotation(AVL_Node *);
-int getbalance(AVL_Node *);
-void printLevelOrder(AVL_Node*);
-void printMeasurments2(measurements[]);
-void menu(struct AVL_Node *);
-int compare_datesSort(char [], char []);
-AVL_Node *creation(AVL_Node *,char[50],float);
-AVL_Node *Delete(AVL_Node *,char[50]);
+#include "avl_date.h"
+#include "common.h"
 
 
 
-void printInorder(AVL_Node *avl_node)
+void printInorder(AVL_Node_a *avl_node)
 {
     if(avl_node!=NULL)
     {
@@ -59,7 +17,7 @@ void printInorder(AVL_Node *avl_node)
         printInorder(avl_node->node_right);      // (Left, Root , Right)
     }
 }
-int getbalance(AVL_Node *avl_node) //function to measure balance
+int getbalance_a(AVL_Node_a *avl_node) //function to measure balance
 {
     int right_height,left_height;
 
@@ -80,7 +38,7 @@ int getbalance(AVL_Node *avl_node) //function to measure balance
 
     return(right_height-left_height); //balance = hr-hl
 }
-int getheight(AVL_Node *avl_node) //function to get height
+int getheight_a(AVL_Node_a *avl_node) //function to get height
 {
     int right_height,left_height;
 
@@ -103,22 +61,22 @@ int getheight(AVL_Node *avl_node) //function to get height
     return(right_height);
 }
 
-struct AVL_Node *AVL_search(struct AVL_Node* avl_node,char avl_key[50])
+struct AVL_Node_a *AVL_search_a(struct AVL_Node_a* avl_node,char avl_key[50])
 {
     if((avl_node == NULL) || compare_datesSort(avl_node->node_key_date,avl_key)==0) //if the node is the same with the root then return the root
     return avl_node;
 
     if(compare_datesSort(avl_node->node_key_date,avl_key)==-1)    //if the key of the node is smaller than the given key then you go to the right
-    return AVL_search(avl_node->node_right, avl_key);
+    return AVL_search_a(avl_node->node_right, avl_key);
 
-    return AVL_search(avl_node->node_left, avl_key);  //else you go to the left
+    return AVL_search_a(avl_node->node_left, avl_key);  //else you go to the left
 }
 
 
 
-struct AVL_Node *AVL_left_rotation(struct AVL_Node *avl_node)
+struct AVL_Node_a *AVL_left_rotation_a(struct AVL_Node_a *avl_node)
 {
-    AVL_Node *newnode;
+    AVL_Node_a *newnode;
     newnode=avl_node->node_right;
 
     avl_node->node_right=newnode->node_left;
@@ -130,8 +88,8 @@ struct AVL_Node *AVL_left_rotation(struct AVL_Node *avl_node)
                                   //            t2  t3              -->      avl_node  t3
                                   //                  \                          /  \    \
                                   //                   t4                      t1   t2    t4
-    avl_node->height=getheight(avl_node);
-    newnode->height=getheight(newnode); //updating the heights
+    avl_node->height=getheight_a(avl_node);
+    newnode->height=getheight_a(newnode); //updating the heights
     return(newnode); //return new root
 }
 
@@ -148,9 +106,9 @@ void delay(int number_of_seconds) //function to make a delay. Only for printf();
 }
 
 
-struct AVL_Node *AVL_right_rotation(struct AVL_Node *avl_node)
+struct AVL_Node_a *AVL_right_rotation_a(struct AVL_Node_a *avl_node)
 {
-    struct AVL_Node *newnode;
+    struct AVL_Node_a *newnode;
     newnode=avl_node->node_left;                  //right rotation function
     avl_node->node_left=newnode->node_right;      //            avl_node
     newnode->node_right=avl_node;                //             /   \
@@ -159,41 +117,41 @@ struct AVL_Node *AVL_right_rotation(struct AVL_Node *avl_node)
                                                 //       t3   t2                -->        t3   avl_node
                                                 //      /                                  /      /  \
                                                 //     t4                                 t4    t2    t1
-    avl_node->height=getheight(avl_node);
-    newnode->height=getheight(newnode); //updating the heights
+    avl_node->height=getheight_a(avl_node);
+    newnode->height=getheight_a(newnode); //updating the heights
     return (newnode); //return new root
 }
 
-struct AVL_Node *AVL_left_left_rotation(struct AVL_Node *avl_node)
+struct AVL_Node_a *AVL_left_left_rotation_a(struct AVL_Node_a *avl_node)
 {
-    avl_node=AVL_right_rotation(avl_node);  //if we have a left left case we need to rotate right
+    avl_node=AVL_right_rotation_a(avl_node);  //if we have a left left case we need to rotate right
     return(avl_node);
 }
 
-struct AVL_Node *AVL_right_right_rotation(struct AVL_Node *avl_node)
+struct AVL_Node_a *AVL_right_right_rotation_a(struct AVL_Node_a *avl_node)
 {
-    avl_node=AVL_left_rotation(avl_node); //if we have a right right case we need to rotate left
+    avl_node=AVL_left_rotation_a(avl_node); //if we have a right right case we need to rotate left
     return(avl_node);
 }
 
-struct AVL_Node *AVL_left_right_rotation(struct AVL_Node *avl_node)
+struct AVL_Node_a *AVL_left_right_rotation_a(struct AVL_Node_a *avl_node)
 {
-    avl_node->node_left=AVL_left_rotation(avl_node->node_left); //if we have a left right case we need to rotate left the left child and then right rotate
-    avl_node=AVL_right_rotation(avl_node);
+    avl_node->node_left=AVL_left_rotation_a(avl_node->node_left); //if we have a left right case we need to rotate left the left child and then right rotate
+    avl_node=AVL_right_rotation_a(avl_node);
     return(avl_node);
 }
 
-struct AVL_Node *AVL_right_left_rotation(struct AVL_Node *avl_node)
+struct AVL_Node_a *AVL_right_left_rotation_a(struct AVL_Node_a *avl_node)
 {
-    avl_node->node_right=AVL_right_rotation(avl_node->node_right); //if we have a right left case we need to rotate right the right child and then left
-    avl_node=AVL_left_rotation(avl_node);
+    avl_node->node_right=AVL_right_rotation_a(avl_node->node_right); //if we have a right left case we need to rotate right the right child and then left
+    avl_node=AVL_left_rotation_a(avl_node);
     return(avl_node);
 }
 
 //We also added the LevelOrder Traversal which prints the avl based on the nodes in each level
-void printLevelOrder(struct AVL_Node* root)
+void printLevelOrder(struct AVL_Node_a* root)
 {
-    int h = getheight(root)+1;
+    int h = getheight_a(root)+1;
     int i;
     for (i = 1; i <= h; i++)
     printCurrentLevel(root, i);
@@ -265,7 +223,7 @@ int compare_datesSort(char date1_s[], char date2_s[]) //function to compare 2 da
     }
 }
 
-void printCurrentLevel(struct AVL_Node *root, int level) // function to help as to  print the Level Order representation of the tree
+void printCurrentLevel(struct AVL_Node_a *root, int level) // function to help as to  print the Level Order representation of the tree
 {
     if(level==0)
     printf("\n");
@@ -284,11 +242,11 @@ void printCurrentLevel(struct AVL_Node *root, int level) // function to help as 
     }
 }
 
-struct AVL_Node * AVL_creation(struct AVL_Node* avl_node,char avl_key[50],float avl_temp) //Function that returns the structs root pointer so we can create
+struct AVL_Node_a * AVL_creation_a(struct AVL_Node_a* avl_node,char avl_key[50],float avl_temp) //Function that returns the structs root pointer so we can create
 {                                                                                        //the avl tree through binary insertion and rebalancing when needed.
     if(avl_node==NULL) //We crate the Node and set its left and right
     {                 // child nodes to null.
-        avl_node = (struct AVL_Node*)malloc(sizeof(struct AVL_Node));//WE HAVE TO ALLOCATE MEMORY DYNAMICALLY INTO THE HEAP!!!
+        avl_node = (struct AVL_Node_a*)malloc(sizeof(struct AVL_Node_a));//WE HAVE TO ALLOCATE MEMORY DYNAMICALLY INTO THE HEAP!!!
 
         strcpy(avl_node->node_key_date,avl_key); //new node has to have null children and its key and temp values
         avl_node->node_right = NULL;
@@ -299,37 +257,37 @@ struct AVL_Node * AVL_creation(struct AVL_Node* avl_node,char avl_key[50],float 
 
     else if(compare_datesSort(avl_key , avl_node->node_key_date)==-1) //if the key we want to insert is smaller than the root then it goes to the left
     {
-        avl_node->node_left = AVL_creation(avl_node->node_left,avl_key,avl_temp);
-        if(getbalance(avl_node)==-2) //if the insertion creates any imbalance we have to rebalance our avl tree! if it is -2 then it leans to the left
+        avl_node->node_left = AVL_creation_a(avl_node->node_left,avl_key,avl_temp);
+        if(getbalance_a(avl_node)==-2) //if the insertion creates any imbalance we have to rebalance our avl tree! if it is -2 then it leans to the left
         if(compare_datesSort(avl_key , avl_node->node_left->node_key_date)==-1) // if the key we want to add is smaller than the left child it means it will go to the left
-        avl_node=AVL_left_left_rotation(avl_node);                              //so we just have to do a left left rotation
+        avl_node=AVL_left_left_rotation_a(avl_node);                              //so we just have to do a left left rotation
         else
-        avl_node=AVL_left_right_rotation(avl_node); // if the key we want to add is greater than the left child it means it will go to the right and it will ruin our tree
+        avl_node=AVL_left_right_rotation_a(avl_node); // if the key we want to add is greater than the left child it means it will go to the right and it will ruin our tree
                                                    //so we just have to do a left right rotation
     }
 
 
     else if(compare_datesSort(avl_key , avl_node->node_key_date)==1)
     {
-        avl_node->node_right = AVL_creation(avl_node->node_right,avl_key,avl_temp);
-        if(getbalance(avl_node)==2) //if the insertion creates any imbalance we have to rebalance our avl tree! if it is 2 then it leans to the right
+        avl_node->node_right = AVL_creation_a(avl_node->node_right,avl_key,avl_temp);
+        if(getbalance_a(avl_node)==2) //if the insertion creates any imbalance we have to rebalance our avl tree! if it is 2 then it leans to the right
         if(compare_datesSort(avl_key , avl_node->node_right->node_key_date)==1)// if the key we want to add is greater than the right child it means it will go to the right
-        avl_node=AVL_right_right_rotation(avl_node); //so we just have to do a right right rotation
+        avl_node=AVL_right_right_rotation_a(avl_node); //so we just have to do a right right rotation
         else
-        avl_node=AVL_right_left_rotation(avl_node); // if the key we want to add is smaller than the right child it means it will go to the left and it will ruin our tree
+        avl_node=AVL_right_left_rotation_a(avl_node); // if the key we want to add is smaller than the right child it means it will go to the left and it will ruin our tree
                                                     //so we just have to do a right left rotation
     }
 
-    avl_node->height=getheight(avl_node); //we update heights
+    avl_node->height=getheight_a(avl_node); //we update heights
     return(avl_node);
 }
 
 
-struct AVL_Node * AVL_delete(struct AVL_Node* avl_node,char avl_key[50])
+struct AVL_Node_a * AVL_delete(struct AVL_Node_a* avl_node,char avl_key[50])
 {
     //there are some cases we need to take into mind
 
-    struct AVL_Node *newnode;
+    struct AVL_Node_a *newnode;
 
     if(avl_node==NULL)
     {
@@ -341,11 +299,11 @@ struct AVL_Node * AVL_delete(struct AVL_Node* avl_node,char avl_key[50])
 
         avl_node->node_right=AVL_delete(avl_node->node_right,avl_key);  // we know that we have to search the right part
 
-        if(getbalance(avl_node)==-2) //if the deletion creates any imbalance we have to rebalance our avl tree! if it is -2 then it leans to the left
-        if(getbalance(avl_node->node_left)<=0) //if the balance of the left child is smaller than zero it means it leans to the left
-        avl_node=AVL_left_left_rotation(avl_node); //so we just have to do a left left rotation
+        if(getbalance_a(avl_node)==-2) //if the deletion creates any imbalance we have to rebalance our avl tree! if it is -2 then it leans to the left
+        if(getbalance_a(avl_node->node_left)<=0) //if the balance of the left child is smaller than zero it means it leans to the left
+        avl_node=AVL_left_left_rotation_a(avl_node); //so we just have to do a left left rotation
         else
-        avl_node=AVL_left_right_rotation(avl_node);// if the left child leans to the right it means  it will ruin our tree
+        avl_node=AVL_left_right_rotation_a(avl_node);// if the left child leans to the right it means  it will ruin our tree
                                                    //so we just have to do a left right rotation
 
     }
@@ -355,13 +313,13 @@ struct AVL_Node * AVL_delete(struct AVL_Node* avl_node,char avl_key[50])
         avl_node->node_left=AVL_delete(avl_node->node_left,avl_key);  // we know  that we have to search the left part
 
 
-        if(getbalance(avl_node)==2) //if the deletion creates any imbalance we have to rebalance our avl tree! if it is 2 then it leans to the right
+        if(getbalance_a(avl_node)==2) //if the deletion creates any imbalance we have to rebalance our avl tree! if it is 2 then it leans to the right
         {
 
-            if(getbalance(avl_node->node_right)>=0) //if the balance of the right child is greater than zero it means it leans to the right
-            avl_node=AVL_right_right_rotation(avl_node); //so we just have to do a right right rotation
+            if(getbalance_a(avl_node->node_right)>=0) //if the balance of the right child is greater than zero it means it leans to the right
+            avl_node=AVL_right_right_rotation_a(avl_node); //so we just have to do a right right rotation
             else
-            avl_node=AVL_right_left_rotation(avl_node);// if the right child leans to the left it means it will ruin our tree
+            avl_node=AVL_right_left_rotation_a(avl_node);// if the right child leans to the left it means it will ruin our tree
                                              //so we just have to do a right left rotation
 
         }
@@ -380,24 +338,24 @@ struct AVL_Node * AVL_delete(struct AVL_Node* avl_node,char avl_key[50])
             strcpy(avl_node->node_key_date,newnode->node_key_date);
             avl_node->node_right=AVL_delete(avl_node->node_right,newnode->node_key_date);
 
-            if(getbalance(avl_node)==-2)           //we check for imbalance
+            if(getbalance_a(avl_node)==-2)           //we check for imbalance
             {
-                if(getbalance(avl_node->node_left)<=0)
-                avl_node=AVL_left_left_rotation(avl_node);
+                if(getbalance_a(avl_node->node_left)<=0)
+                avl_node=AVL_left_left_rotation_a(avl_node);
                 else
-                avl_node=AVL_left_right_rotation(avl_node);
+                avl_node=AVL_left_right_rotation_a(avl_node);
             }
         }
 
         else return(avl_node->node_left);
     }
 
-    avl_node->height=getheight(avl_node);
+    avl_node->height=getheight_a(avl_node);
     return(avl_node);
 }
 
 
-void menu(struct AVL_Node *avl)
+void menu_a(AVL_Node_a *avl)
 {
     int input,input1,input5,input6,input8,input9,input10;
     char input2[50];
@@ -457,7 +415,7 @@ void menu(struct AVL_Node *avl)
                         switch(input9)
                         {
                             case 1:
-                            menu(avl);
+                            menu_a(avl);
                             break;
 
                             case 2:
@@ -480,7 +438,6 @@ void menu(struct AVL_Node *avl)
                     delay(1);
                     printf("\n\nLevel Order traversal of the constructed AVL tree is :\n");
                     printLevelOrder(avl);
-                    //printf("\n height is : %d\n",avl->height);
                     printf("\n\n1.Back");
                     printf("\n2.Exit");
                     do
@@ -492,7 +449,7 @@ void menu(struct AVL_Node *avl)
                         switch(input10)
                         {
                             case 1:
-                            menu(avl);
+                            menu_a(avl);
                             break;
 
                             case 2:
@@ -510,7 +467,7 @@ void menu(struct AVL_Node *avl)
                     break;
 
                     case 3:
-                    menu(avl);
+                    menu_a(avl);
                     break;
 
                     case 4:
@@ -533,9 +490,9 @@ void menu(struct AVL_Node *avl)
             scanf("%s",input2);
 
             printf("\n");
-            if(AVL_search(avl,input2)==NULL)
+            if(AVL_search_a(avl,input2)==NULL)
             printf("The date %s does not exist!!\n",input2);
-            else printf("\nIn %s the temperature of the ocean was  %.2f \n",input2,AVL_search(avl,input2)->node_temp);
+            else printf("\nIn %s the temperature of the ocean was  %.2f \n",input2,AVL_search_a(avl,input2)->node_temp);
             printf("\n1.Back");
             printf("\n2.Exit");
             do{
@@ -546,7 +503,7 @@ void menu(struct AVL_Node *avl)
                 switch(input6)
                 {
                     case 1:
-                    menu(avl);
+                    menu_a(avl);
                     break;
 
                     case 2:
@@ -569,10 +526,10 @@ void menu(struct AVL_Node *avl)
             printf("\nWhat date would you like to search? : ");
             scanf("%s",input3);
             printf("\n");
-            if(AVL_search(avl,input3)==NULL)
+            if(AVL_search_a(avl,input3)==NULL)
             printf("The date %s does not exist!!\n",input3);
             else{
-                printf("\nIn %s the temperature of the ocean was  %.2f \n",input3,AVL_search(avl,input3)->node_temp);
+                printf("\nIn %s the temperature of the ocean was  %.2f \n",input3,AVL_search_a(avl,input3)->node_temp);
                 do{
                     loop5=false;
                     printf("\nWhat would you like to be your new temperature? : ");
@@ -585,8 +542,8 @@ void menu(struct AVL_Node *avl)
                 }while(loop5);
 
                 printf("\n");
-                AVL_search(avl,input3)->node_temp=input4;
-                printf("\nIn %s the temperature of the ocean was  %.2f \n",input3,AVL_search(avl,input3)->node_temp);
+                AVL_search_a(avl,input3)->node_temp=input4;
+                printf("\nIn %s the temperature of the ocean was  %.2f \n",input3,AVL_search_a(avl,input3)->node_temp);
             }
             printf("\n1.Back");
             printf("\n2.Exit");
@@ -599,7 +556,7 @@ void menu(struct AVL_Node *avl)
                 switch(input5)
                 {
                     case 1:
-                    menu(avl);
+                    menu_a(avl);
                     break;
 
                     case 2:
@@ -620,7 +577,7 @@ void menu(struct AVL_Node *avl)
             printf("What date would you like to delete? : ");
             scanf("%s",input7);
             printf("\n");
-            if(AVL_search(avl,input7)==NULL)
+            if(AVL_search_a(avl,input7)==NULL)
             printf("The date %s does not exist!!\n",input7);
             else{
                 avl=AVL_delete(avl,input7);
@@ -636,7 +593,7 @@ void menu(struct AVL_Node *avl)
                 switch(input8)
                 {
                     case 1:
-                    menu(avl);
+                    menu_a(avl);
                     break;
 
                     case 2:
@@ -667,22 +624,20 @@ void menu(struct AVL_Node *avl)
     }while(loop);
 }
 
-int main()
+AVL_Node_a* load_avl_a(measurements values[], AVL_Node_a *avl)
 {
     //Initialization of the file pointer
     FILE *file = fopen("ocean.csv", "r");
     if(!file)
     {
         printf("Error");
-        return 0;
+        exit(0);
     }
 
     char buff1[1024];
     int row_count = 0;
     int field_count =0;
 
-
-    measurements values[1405];
     int i=0;
 
     while(fgets(buff1,sizeof(buff1),file))
@@ -720,27 +675,15 @@ int main()
     fclose(file);
 
 
-
-    AVL_Node *avl=NULL;
-
     for(int i=0; i<1405; i++)
     {
-        avl=AVL_creation(avl,values[i].date,values[i].temp); //printf("%.2f\n",float_values[i].temp2);
+        avl=AVL_creation_a(avl,values[i].date,values[i].temp);
     }
-
-    menu(avl); //Function to create the menu
-
-    return 0;
-
+    return avl;
 
 }
 
-
-
-
-
-
-void printMeasurments2(measurements values[])
+void printMeasurments(measurements values[])
 {
 for(int i=0; i<1405; i++)
 {
