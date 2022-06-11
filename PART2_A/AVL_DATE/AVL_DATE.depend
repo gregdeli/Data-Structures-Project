@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1654942462 source:c:\users\greg\documents\github\data_structures_project\part2_a\avl_date\avl_date.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	<stdbool.h>
+

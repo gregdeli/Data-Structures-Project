@@ -209,7 +209,7 @@ return(avl_node);
 }
 
 struct AVL_Node * AVL_creation(struct AVL_Node* avl_node,char avl_date[50],float avl_key) //Function that returns the structs root pointer so we can create
-    {                                                                      //the avl tree through binary insertion and rebalancing when needed.
+{                                                                      //the avl tree through binary insertion and rebalancing when needed.
     if(avl_node==NULL) //We crate the Node and set its left and right
     {                 // child nodes to null.
       avl_node = (struct AVL_Node*)malloc(sizeof(struct AVL_Node));//WE HAVE TO ALLOCATE MEMORY DYNAMICALLY INTO THE HEAP!!!
@@ -220,8 +220,8 @@ struct AVL_Node * AVL_creation(struct AVL_Node* avl_node,char avl_date[50],float
     strcpy(avl_node->node_date,avl_date);                 //    /  \
                                                     //    NULL   NULL
 
-avl_node->node_new_date= (char *)malloc(sizeof(char)*10);
-avl_node->node_new_date= realloc(avl_node->node_new_date,sizeof(char*)*50);
+    avl_node->node_new_date= (char *)malloc(sizeof(char*)*11);
+    //avl_node->node_new_date= realloc(avl_node->node_new_date,sizeof(char*)*15);
     }
 
             else if(avl_key<avl_node->node_key_temp) //if the key we want to insert is smaller than the root then it goes to the left
@@ -262,7 +262,7 @@ avl_node->node_new_date= realloc(avl_node->node_new_date,sizeof(char*)*50);
 
 
 
-    }
+}
 
 
 void menu(struct AVL_Node *avl){
