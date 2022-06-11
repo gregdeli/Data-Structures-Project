@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1654799307 source:c:\users\greg\documents\github\data_structures_project\part2_a_b_c\avl_hashing\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	<stdbool.h>
+	<limits.h>
+

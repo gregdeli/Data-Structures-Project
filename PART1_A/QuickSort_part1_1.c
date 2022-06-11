@@ -1,4 +1,4 @@
-    #include <time.h>
+ #include <time.h>
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
@@ -16,6 +16,14 @@
         float salinity,  oxygen;
 
     }measurements;
+    void swap(measurements values[],int x,int y)
+{
+    measurements temp;
+
+    temp=values[x];
+    values[x]=values[y];
+    values[y]=temp;
+}
 
     int main()
     {
@@ -36,7 +44,7 @@
         int i=0;
 
          while(fgets(buff1,sizeof(buff1),file))
-        {
+    {
         field_count=0;
         row_count++;
         if(row_count == 1)
@@ -66,7 +74,7 @@
                 field_count++;
             }
             i++;
-        }
+    }
         fclose(file);
 
 
@@ -75,6 +83,9 @@ clock_t start_t, end_t;
 
 
    start_t = clock();
+
+
+
    Quick_Sort2(values,0,1404);
    end_t = clock();
 
@@ -151,18 +162,49 @@ if (nleft<nright)
     Quick_Sort2(values,nleft,i); //We now have to sort the other partitions
     Quick_Sort2(values,i+2,nright);
     }
-    for(int i=0; i<1404; i++)
+    int max_position=0;
+
+    int max_date_position=0;
+
+    char max_date[50];
+
+    float number=values[0].phosphate;
+
+    int j=0;
+
+    for(int i=1; i<1405+1; i++)
+    {
+        if(number!=values[i].temp || i==1405)
         {
-            if(values[i].temp==values[i+1].temp){
-        if(compare_datesSort(values[i].date,values[i+1].date)==1)
-           {
-              measurements v1=values[i];
-               measurements v2=values[i+1];
-               values[i]=v2;
-               values[i+1]=v1;
-           }
+            number=values[i].temp;
+
+            max_position=i;
+
+            for(int temp_max_position=max_position-1; temp_max_position>j; temp_max_position--)
+            {
+                strcpy(max_date,values[temp_max_position].date);
+
+                max_date_position=temp_max_position;
+
+                for(int g=j; g<temp_max_position; g++)
+                {
+                    if(compare_datesSort(max_date,values[g].date)==-1)
+                    {
+                        strcpy(max_date,values[g].date);
+
+                        max_date_position=g;
+                    }
+                }
+
+                if(max_date_position!=temp_max_position)
+                {
+                    swap(values,max_date_position,temp_max_position);
+                }
             }
+
+            j=max_position;
         }
+    }
     }
     int compare_datesSort(char date1_s[], char date_s[])
     {
@@ -228,35 +270,3 @@ if (nleft<nright)
                   return 0;
         }
     }
-
-void QuickSort(int array[],int nleft,int nright)
-{
-    if (nleft<nright)
-    {
-    int pivot1 = array[nright]; //We set the pivot as the last element
-    int i = (nleft - 1); // We use i to point out the element that is smaller in a partition and to also indicate
-                         // the right position of our pivot
-
-    for (int j = nleft; j <= nright - 1; j++)
-    {
-        if (array[j] < pivot1)//If the element j that we are currently looking is smaller than the pivot
-        {
-            i++;
-
-    int temp=array[i];
-    array[i]=array[j]; //we swap the smaller elements to the left and the biggest to the right
-    array[j]=temp;
-
-        }
-    }
-    int temp1=array[i+1];
-    array[i+1]=array[nright]; //We swap the pivot with the i+1 element because the partition of the array before the i is sorted.
-    array[nright]=temp1;
-
-    QuickSort(array,nleft,i); //We now have to sort the other partitions
-    QuickSort(array,i+2,nright);
-    }
-}
-
-/* Function to print an arrayay */
-

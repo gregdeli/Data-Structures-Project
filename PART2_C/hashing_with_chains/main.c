@@ -456,6 +456,7 @@ int main()
                     {
                         printf("error\n");
                         loop = true;
+                        clear_console();
                         continue;
                     }
                     int res = delete_measurement(date, hash_table);
