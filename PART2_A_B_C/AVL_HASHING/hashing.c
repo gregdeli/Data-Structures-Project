@@ -7,29 +7,6 @@
 #include "hashing.h"
 
 
-
-/*typedef struct measurements
-{
-    char date[20];
-    float temp;
-}measurements;
-
-typedef struct node
-{
-    char date[20];
-    float temp;
-    struct node* next; //pointer to next node
-    struct node* tail; //pointer to last node
-    bool is_head;
-}node;
-
-typedef struct date{
-    int month;
-    int day;
-    int year;
-}date;*/
-
-
 void read_file(FILE *file, measurements_hashing values[])
 {
     if(!file)
@@ -334,7 +311,6 @@ void menu_h()
                     float temp = access_temp(date, hash_table);
                     if(temp==200)
                     {
-                        //printf("error\n");
                         loop = true;
                         clear_console();
                         continue;
@@ -378,6 +354,7 @@ void menu_h()
                     printf("Enter a new temperature: ");
                     if(scanf("%f", &new_temp)!=1)
                     {
+                        while ((getchar()) != '\n');
                         printf("\n");
                         loop = true;
                         clear_console();
@@ -490,29 +467,3 @@ void menu_h()
     }
     while(loop);
 }
-
-/*int main()
-{
-    FILE *file = fopen("ocean.csv", "r");
-    measurements values[1405];
-    read_file(file, values);
-    int size = sizeof(values)/sizeof(values[0]);
-    node hash_table[11]; //because h(node) = ... mod11
-    //initialize hash table with node that have an impossible temp value so that we can check later if hash_table[i] "is empty"
-    node initial_node;
-    initial_node.temp = 200;
-    for(int i=0; i<11; i++)
-        {hash_table[i] = initial_node;}
-    //build node array an array with all the measurments in node form so that each node is in a different place in memory
-    node node_array[size];
-    for(int i=0; i<size; i++)
-        node_array[i] = measurement_to_node(values[i]);
-    //build hash table
-    for(int i=0; i<size; i++)
-        insert(&node_array[i] ,hash_table);
-
-    //menu
-    menu(hash_table);
-
-    return 0;
-}*/
