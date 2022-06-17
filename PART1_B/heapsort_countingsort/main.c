@@ -109,6 +109,53 @@ void swap(measurements values[],int x,int y)
     values[y]=temp;
 }
 
+void Maximum_ordered_sort(measurements values[],int size)
+{
+    int max_position=0;
+
+    int max_date_position=0;
+
+    char max_date[50];
+
+    float number=values[0].phosphate;
+
+    int start=0;
+
+    for(int i=1; i<=size; i++)
+    {
+        if(number!=values[i].phosphate || i==size)
+        {
+            number=values[i].phosphate;
+
+            max_position=i;
+
+            for(int temp_max_position=max_position-1; temp_max_position>start; temp_max_position--)
+            {
+                strcpy(max_date,values[temp_max_position].date);
+
+                max_date_position=temp_max_position;
+
+                for(int g=start; g<temp_max_position; g++)
+                {
+                    if(Compare_dates(max_date,values[g].date)==-1)
+                    {
+                        strcpy(max_date,values[g].date);
+
+                        max_date_position=g;
+                    }
+                }
+
+                if(max_date_position!=temp_max_position)
+                {
+                    swap(values,max_date_position,temp_max_position);
+                }
+            }
+
+            start=max_position;
+        }
+    }
+}
+
 void Heapify(measurements values[],int size,int position)
 {
     int largest=position;
@@ -119,32 +166,10 @@ void Heapify(measurements values[],int size,int position)
     {
         largest=left;
     }
-    else if(left<size && values[left].phosphate==values[largest].phosphate)
-    {
-        int result_dates1;
-
-        result_dates1=Compare_dates(values[left].date,values[largest].date);
-
-        if(result_dates1==1)
-        {
-            largest=left;
-        }
-    }
 
     if (right<size && values[right].phosphate>values[largest].phosphate)
     {
         largest=right;
-    }
-    else if(right<size && values[right].phosphate==values[largest].phosphate)
-    {
-        int result_dates2;
-
-        result_dates2=Compare_dates(values[right].date,values[largest].date);
-
-        if(result_dates2==1)
-        {
-            largest=right;
-        }
     }
 
     if (largest!=position)
@@ -168,6 +193,8 @@ void Heap_sort(measurements values[],int size)
 
         Heapify(values, i, 0);
     }
+
+    Maximum_ordered_sort(values,size);
 }
 
 void Counting_sort(measurements values[],int size)
@@ -229,49 +256,7 @@ void Counting_sort(measurements values[],int size)
         values[i]=result_array[i];
     }
 
-    int max_position=0;
-
-    int max_date_position=0;
-
-    char max_date[50];
-
-    float number=values[0].phosphate;
-
-    int j=0;
-
-    for(int i=1; i<size+1; i++)
-    {
-        if(number!=values[i].phosphate || i==size)
-        {
-            number=values[i].phosphate;
-
-            max_position=i;
-
-            for(int temp_max_position=max_position-1; temp_max_position>j; temp_max_position--)
-            {
-                strcpy(max_date,values[temp_max_position].date);
-
-                max_date_position=temp_max_position;
-
-                for(int g=j; g<temp_max_position; g++)
-                {
-                    if(Compare_dates(max_date,values[g].date)==-1)
-                    {
-                        strcpy(max_date,values[g].date);
-
-                        max_date_position=g;
-                    }
-                }
-
-                if(max_date_position!=temp_max_position)
-                {
-                    swap(values,max_date_position,temp_max_position);
-                }
-            }
-
-            j=max_position;
-        }
-    }
+    Maximum_ordered_sort(values,size);
 }
 
 int main()
@@ -341,7 +326,7 @@ int main()
     start1=clock();
     Heap_sort(values1, size);
     end1=clock();
-printMeasurments2(values1);
+
     double time_taken1=(double)(end1-start1)/CLOCKS_PER_SEC;
 
     printf("Heap_sort took %f seconds to execute.\n", time_taken1);
@@ -392,13 +377,3 @@ printMeasurments2(values1);
 
     return 0;
 }
-void printMeasurments2(measurements values[])
-    {
-        for(int i=0; i<1405; i++)
-        {
-
-           printf("%s %.2f %.2f %.2f ",values[i].date,values[i].temp,values[i].phosphate,values[i].silicate);
-           printf("%.2f %.2f %.2f %.2f\n",values[i].nitrite,values[i].nitrate,values[i].salinity,values[i].oxygen);
-           //printf("%.2f\n",values[i].temp2);
-        }
-    }
