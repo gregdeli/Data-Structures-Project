@@ -4,10 +4,11 @@
 #include <stdbool.h>
 #include <time.h>
 #include <math.h>
+#include "hashing.h"
 
 
 
-typedef struct measurements
+/*typedef struct measurements
 {
     char date[20];
     float temp;
@@ -26,22 +27,10 @@ typedef struct date{
     int month;
     int day;
     int year;
-}date;
-
-void delay(int number_of_seconds) //function to make a delay
-{
-    // Converting time into milli_seconds
-    int milli_seconds = 1000 * number_of_seconds;
-
-    // Storing start time
-    clock_t start_time = clock();
-
-    // looping till required time is not achieved
-    while (clock() < start_time + milli_seconds);
-}
+}date;*/
 
 
-void read_file(FILE *file, measurements values[])
+void read_file(FILE *file, measurements_hashing values[])
 {
     if(!file)
       printf("Error");
@@ -76,7 +65,7 @@ void read_file(FILE *file, measurements values[])
     //now I have an array of structs that contain the dates and temps from to ocean.csv
 }
 
-void print_measurments(measurements values[])
+void print_measurments(measurements_hashing values[])
 {
     for(int i=0; i<1405; i++)
     {
@@ -283,7 +272,7 @@ int delete_measurement(char date[], node hash_table[])
     }
 }
 
-node measurement_to_node(measurements m)
+node measurement_to_node(measurements_hashing m)
 {
     node n;
     strcpy(n.date, m.date);
@@ -294,8 +283,25 @@ node measurement_to_node(measurements m)
     return n;
 }
 
-void menu(node hash_table[])
+void menu_h()
 {
+    FILE *file = fopen("ocean.csv", "r");
+    measurements_hashing values[1405];
+    read_file(file, values);
+    int size = sizeof(values)/sizeof(values[0]);
+    node hash_table[11]; //because h(node) = ... mod11
+    //initialize hash table with node that have an impossible temp value so that we can check later if hash_table[i] "is empty"
+    node initial_node;
+    initial_node.temp = 200;
+    for(int i=0; i<11; i++)
+        {hash_table[i] = initial_node;}
+    //build node array an array with all the measurments in node form so that each node is in a different place in memory
+    node node_array[size];
+    for(int i=0; i<size; i++)
+        node_array[i] = measurement_to_node(values[i]);
+    //build hash table
+    for(int i=0; i<size; i++)
+        insert(&node_array[i] ,hash_table);
     //menu
     int choice = 0;
     bool loop;
@@ -485,7 +491,7 @@ void menu(node hash_table[])
     while(loop);
 }
 
-main()
+/*int main()
 {
     FILE *file = fopen("ocean.csv", "r");
     measurements values[1405];
@@ -509,4 +515,4 @@ main()
     menu(hash_table);
 
     return 0;
-}
+}*/

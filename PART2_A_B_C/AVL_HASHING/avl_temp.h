@@ -22,12 +22,12 @@ AVL_Node_b *AVL_left_left_rotation(AVL_Node_b *);
 AVL_Node_b *AVL_left_right_rotation(AVL_Node_b *);
 AVL_Node_b *AVL_right_left_rotation(AVL_Node_b *);
 int getbalance_b(AVL_Node_b *);
-void menu_b(struct AVL_Node_b *);
+int menu_b(struct AVL_Node_b *);
 int compare_datesSort(char [], char []);
 AVL_Node_b *creation(AVL_Node_b *,char[50],float);
 float maximum(AVL_Node_b *);
 float minimum(AVL_Node_b *);
-AVL_Node_b* load_avl_b(measurements values[], AVL_Node_b *avl);
+AVL_Node_b* load_avl_b(measurements values[]); // AVL_Node_b *avl
 
 
 

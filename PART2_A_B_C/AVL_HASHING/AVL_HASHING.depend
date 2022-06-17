@@ -1,10 +1,11 @@
 # depslib dependency file v1.0
-1654964192 source:c:\users\greg\documents\github\data_structures_project\part2_a_b_c\avl_hashing\main.c
+1655501994 source:c:\users\greg\documents\github\data_structures_project\part2_a_b_c\avl_hashing\main.c
 	<stdio.h>
 	<stdlib.h>
 	"avl_date.h"
 	"avl_temp.h"
 	"common.h"
+	"hashing.h"
 
 1654799521 source:c:\users\greg\documents\github\data_structures_project\part2_a_b_c\avl_hashing\aaaa.c
 	<stdio.h>
@@ -41,7 +42,7 @@
 	<time.h>
 	<math.h>
 
-1654963617 source:c:\users\greg\documents\github\data_structures_project\part2_a_b_c\avl_hashing\avl_temp.c
+1655501532 source:c:\users\greg\documents\github\data_structures_project\part2_a_b_c\avl_hashing\avl_temp.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -51,7 +52,7 @@
 	"avl_temp.h"
 	"common.h"
 
-1654958740 source:c:\users\greg\documents\github\data_structures_project\part2_a_b_c\avl_hashing\avl_date.c
+1655500183 source:c:\users\greg\documents\github\data_structures_project\part2_a_b_c\avl_hashing\avl_date.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -60,11 +61,24 @@
 	"avl_date.h"
 	"common.h"
 
-1654958763 c:\users\greg\documents\github\data_structures_project\part2_a_b_c\avl_hashing\avl_date.h
+1655495784 c:\users\greg\documents\github\data_structures_project\part2_a_b_c\avl_hashing\avl_date.h
 	"common.h"
 
-1654962824 c:\users\greg\documents\github\data_structures_project\part2_a_b_c\avl_hashing\avl_temp.h
+1655501616 c:\users\greg\documents\github\data_structures_project\part2_a_b_c\avl_hashing\avl_temp.h
 	"common.h"
 
 1654957331 c:\users\greg\documents\github\data_structures_project\part2_a_b_c\avl_hashing\common.h
+
+1655494096 source:c:\users\greg\documents\github\data_structures_project\part2_a_b_c\avl_hashing\hashing.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdbool.h>
+	<time.h>
+	<math.h>
+	"hashing.h"
+
+1655494111 c:\users\greg\documents\github\data_structures_project\part2_a_b_c\avl_hashing\hashing.h
+	<stdbool.h>
+	"common.h"
 

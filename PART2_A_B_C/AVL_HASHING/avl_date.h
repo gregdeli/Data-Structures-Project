@@ -25,7 +25,7 @@ int getbalance_a(AVL_Node_a *);
 void printInorder(AVL_Node_a *avl_node);
 void printLevelOrder(AVL_Node_a*);
 void printMeasurments(measurements[]);
-void menu_a(struct AVL_Node_a *);
+int menu_a(struct AVL_Node_a *);
 int compare_datesSort(char [], char []);
 AVL_Node_a *AVL_creation_a(AVL_Node_a *,char[50],float);
 AVL_Node_a *AVL_delete(AVL_Node_a *,char[50]);

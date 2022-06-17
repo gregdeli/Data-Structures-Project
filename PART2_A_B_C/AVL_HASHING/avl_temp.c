@@ -128,19 +128,6 @@ struct AVL_Node_b *AVL_left_rotation_b(struct AVL_Node_b *avl_node)
 
 }
 
-/*void delay(int number_of_seconds) //function to make a delay. Only for printf(); purposes
-{
-    // Converting time into milli_seconds
-    int milli_seconds = 1000 * number_of_seconds;
-
-    // Storing start time
-    clock_t start_time = clock();
-
-    // looping till required time is not achieved
-    while (clock() < start_time + milli_seconds)
-    ;
-}*/
-
 struct AVL_Node_b *AVL_right_rotation_b(struct AVL_Node_b *avl_node)
 {
 
@@ -242,10 +229,69 @@ struct AVL_Node_b * AVL_creation_b(struct AVL_Node_b* avl_node,char avl_date[50]
 
 }
 
-
-void menu_b(struct AVL_Node_b *avl)
+AVL_Node_b* load_avl_b(measurements values[])
 {
+    //Initialization of the file pointer
+    FILE *file = fopen("ocean.csv", "r");
+    if(!file)
+    {
+        printf("Error");
+        return 0;;
+    }
 
+    char buff1[1024];
+    int row_count = 0;
+    int field_count =0;
+
+    int i=0;
+
+    while(fgets(buff1,sizeof(buff1),file))
+    {
+        field_count=0;
+        row_count++;
+        if(row_count == 1)
+        continue;
+
+        char *field = strtok(buff1, ",");
+        while(field)
+        {
+            if(field_count==0)
+            strcpy(values[i].date,field);
+            if(field_count==1)
+            values[i].temp=atof(field);
+            if(field_count==2)
+            values[i].phosphate=atof(field);
+            if(field_count==3)
+            values[i].silicate=atof(field);
+            if(field_count==4)
+            values[i].nitrite=atof(field);
+            if(field_count==5)
+            values[i].nitrate=atof(field);
+            if(field_count==6)
+            values[i].salinity=atof(field);
+            if(field_count==7)
+            values[i].oxygen=atof(field);
+
+            field = strtok(NULL, ",");
+            field_count++;
+        }
+        i++;
+    }
+    fclose(file);
+
+    AVL_Node_b *avl=NULL;
+
+    for(int i=0; i<1405; i++)
+    {
+        avl=AVL_creation_b(avl,values[i].date,values[i].temp);
+
+    }
+    return avl;
+
+}
+
+int menu_b(struct AVL_Node_b *avl)
+{
     int input,input1,input6,input9,input10;
     float input2;
     bool loop=false;
@@ -283,7 +329,7 @@ void menu_b(struct AVL_Node_b *avl)
 
        do
        {
-            printf("\nWhat acrtion would you like to see?: ");
+            printf("\nWhat action would you like to see?: ");
             scanf("%d",&input1);
             while((getchar()) != '\n');
             printf("\n");
@@ -331,7 +377,7 @@ void menu_b(struct AVL_Node_b *avl)
                         printf("Exiting...");
                         for (int i = 0; i < 3; i++)
                         delay(1);
-                        exit(0);
+                        return 0;;
                         break;
 
                         default:
@@ -381,7 +427,7 @@ void menu_b(struct AVL_Node_b *avl)
                         printf("Exiting...");
                         for (int i = 0; i < 3; i++)
                         delay(1);
-                        exit(0);
+                        return 0;;
                         break;
 
                         default:
@@ -409,7 +455,7 @@ void menu_b(struct AVL_Node_b *avl)
                 printf("Exiting...");
                 for (int i = 0; i < 3; i++)
                 delay(1);
-                exit(0);
+                return 0;;
                 break;
                 default:
                 printf("Wrong Input!\n");
@@ -466,7 +512,7 @@ void menu_b(struct AVL_Node_b *avl)
                 printf("Exiting...");
                 for (int i = 0; i < 3; i++)
                 delay(1);
-                exit(0);
+                return 0;;
                 break;
 
                 default:
@@ -487,7 +533,7 @@ void menu_b(struct AVL_Node_b *avl)
         printf("Exiting...");
         for (int i = 0; i < 3; i++)
         delay(1);
-        exit(0);
+        return 0;;
         break;
 
         default:
@@ -498,62 +544,5 @@ void menu_b(struct AVL_Node_b *avl)
     }while(loop);
 }
 
-AVL_Node_b* load_avl_b(measurements values[], AVL_Node_b *avl)
-{
-    //Initialization of the file pointer
-    FILE *file = fopen("ocean.csv", "r");
-    if(!file)
-    {
-        printf("Error");
-        exit(0);
-    }
 
-    char buff1[1024];
-    int row_count = 0;
-    int field_count =0;
-
-    int i=0;
-
-    while(fgets(buff1,sizeof(buff1),file))
-    {
-        field_count=0;
-        row_count++;
-        if(row_count == 1)
-        continue;
-
-        char *field = strtok(buff1, ",");
-        while(field)
-        {
-            if(field_count==0)
-            strcpy(values[i].date,field);
-            if(field_count==1)
-            values[i].temp=atof(field);
-            if(field_count==2)
-            values[i].phosphate=atof(field);
-            if(field_count==3)
-            values[i].silicate=atof(field);
-            if(field_count==4)
-            values[i].nitrite=atof(field);
-            if(field_count==5)
-            values[i].nitrate=atof(field);
-            if(field_count==6)
-            values[i].salinity=atof(field);
-            if(field_count==7)
-            values[i].oxygen=atof(field);
-
-            field = strtok(NULL, ",");
-            field_count++;
-        }
-        i++;
-    }
-    fclose(file);
-
-
-    for(int i=0; i<1405; i++)
-    {
-        avl=AVL_creation_b(avl,values[i].date,values[i].temp);
-    }
-    return avl;
-
-}
 

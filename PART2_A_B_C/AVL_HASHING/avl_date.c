@@ -354,8 +354,66 @@ struct AVL_Node_a * AVL_delete(struct AVL_Node_a* avl_node,char avl_key[50])
     return(avl_node);
 }
 
+AVL_Node_a* load_avl_a(measurements values[], AVL_Node_a *avl)
+{
+    //Initialization of the file pointer
+    FILE *file = fopen("ocean.csv", "r");
+    if(!file)
+    {
+        printf("Error");
+        return 0;
+    }
 
-void menu_a(AVL_Node_a *avl)
+    char buff1[1024];
+    int row_count = 0;
+    int field_count =0;
+
+    int i=0;
+
+    while(fgets(buff1,sizeof(buff1),file))
+    {
+        field_count=0;
+        row_count++;
+        if(row_count == 1)
+        continue;
+
+        char *field = strtok(buff1, ",");
+        while(field)
+        {
+            if(field_count==0)
+            strcpy(values[i].date,field);
+            if(field_count==1)
+            values[i].temp=atof(field);
+            if(field_count==2)
+            values[i].phosphate=atof(field);
+            if(field_count==3)
+            values[i].silicate=atof(field);
+            if(field_count==4)
+            values[i].nitrite=atof(field);
+            if(field_count==5)
+            values[i].nitrate=atof(field);
+            if(field_count==6)
+            values[i].salinity=atof(field);
+            if(field_count==7)
+            values[i].oxygen=atof(field);
+
+            field = strtok(NULL, ",");
+            field_count++;
+        }
+        i++;
+    }
+    fclose(file);
+
+
+    for(int i=0; i<1405; i++)
+    {
+        avl=AVL_creation_a(avl,values[i].date,values[i].temp);
+    }
+    return avl;
+
+}
+
+int menu_a(AVL_Node_a *avl)
 {
     int input,input1,input5,input6,input8,input9,input10;
     char input2[50];
@@ -422,7 +480,7 @@ void menu_a(AVL_Node_a *avl)
                             printf("Exiting...");
                             for (int i = 0; i < 3; i++)
                             delay(1);
-                            exit(0);
+                            return 0;
                             break;
 
                             default:
@@ -456,7 +514,7 @@ void menu_a(AVL_Node_a *avl)
                             printf("Exiting...");
                             for (int i = 0; i < 3; i++)
                             delay(1);
-                            exit(0);
+                            return 0;
                             break;
 
                             default:
@@ -474,7 +532,7 @@ void menu_a(AVL_Node_a *avl)
                     printf("Exiting...");
                     for (int i = 0; i < 3; i++)
                     delay(1);
-                    exit(0);
+                    return 0;
                     break;
 
                     default:
@@ -510,7 +568,7 @@ void menu_a(AVL_Node_a *avl)
                     printf("Exiting...");
                     for (int i = 0; i < 3; i++)
                     delay(1);
-                    exit(0);
+                    return 0;
                     break;
 
                     default:
@@ -563,7 +621,7 @@ void menu_a(AVL_Node_a *avl)
                     printf("Exiting...");
                     for (int i = 0; i < 3; i++)
                     delay(1);
-                    exit(0);
+                    return 0;
                     break;
 
                     default:
@@ -600,7 +658,7 @@ void menu_a(AVL_Node_a *avl)
                     printf("Exiting...");
                     for (int i = 0; i < 3; i++)
                     delay(1);
-                    exit(0);
+                    return 0;
                     break;
 
                     default:
@@ -614,7 +672,7 @@ void menu_a(AVL_Node_a *avl)
             printf("Exiting...");
             for (int i = 0; i < 3; i++)
             delay(1);
-            exit(0);
+            return 0;
             break;
 
             default:
@@ -624,65 +682,6 @@ void menu_a(AVL_Node_a *avl)
     }while(loop);
 }
 
-AVL_Node_a* load_avl_a(measurements values[], AVL_Node_a *avl)
-{
-    //Initialization of the file pointer
-    FILE *file = fopen("ocean.csv", "r");
-    if(!file)
-    {
-        printf("Error");
-        exit(0);
-    }
-
-    char buff1[1024];
-    int row_count = 0;
-    int field_count =0;
-
-    int i=0;
-
-    while(fgets(buff1,sizeof(buff1),file))
-    {
-        field_count=0;
-        row_count++;
-        if(row_count == 1)
-        continue;
-
-        char *field = strtok(buff1, ",");
-        while(field)
-        {
-            if(field_count==0)
-            strcpy(values[i].date,field);
-            if(field_count==1)
-            values[i].temp=atof(field);
-            if(field_count==2)
-            values[i].phosphate=atof(field);
-            if(field_count==3)
-            values[i].silicate=atof(field);
-            if(field_count==4)
-            values[i].nitrite=atof(field);
-            if(field_count==5)
-            values[i].nitrate=atof(field);
-            if(field_count==6)
-            values[i].salinity=atof(field);
-            if(field_count==7)
-            values[i].oxygen=atof(field);
-
-            field = strtok(NULL, ",");
-            field_count++;
-        }
-        i++;
-    }
-    fclose(file);
-
-
-    for(int i=0; i<1405; i++)
-    {
-        avl=AVL_creation_a(avl,values[i].date,values[i].temp);
-    }
-    return avl;
-
-}
-
 void printMeasurments(measurements values[])
 {
 for(int i=0; i<1405; i++)
@@ -690,6 +689,5 @@ for(int i=0; i<1405; i++)
 
 printf("%s %.2f %.2f %.2f ",values[i].date,values[i].temp,values[i].phosphate,values[i].silicate);
 printf("%.2f %.2f %.2f %.2f\n",values[i].nitrite,values[i].nitrate,values[i].salinity,values[i].oxygen);
-//printf("%.2f\n",float_values[i].temp2);
 }
 }
