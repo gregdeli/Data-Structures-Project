@@ -153,7 +153,7 @@ void clear_console()
 
 int hash_function(node node1)
 {
-    char num = 'a';
+    char num = 'a'; //initializing num
     int sum = 0;
     int i=0;
     while(num != '\0')
@@ -371,6 +371,7 @@ void menu(node hash_table[])
                     float new_temp;
                     printf("Enter a new temperature: ");
                     if(scanf("%f", &new_temp)!=1)
+                    while ((getchar()) != '\n');
                     {
                         printf("\n");
                         loop = true;
