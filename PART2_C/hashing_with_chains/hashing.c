@@ -328,7 +328,6 @@ void menu(node hash_table[])
                     float temp = access_temp(date, hash_table);
                     if(temp==200)
                     {
-                        //printf("error\n");
                         loop = true;
                         clear_console();
                         continue;

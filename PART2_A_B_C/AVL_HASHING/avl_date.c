@@ -684,10 +684,10 @@ int menu_a(AVL_Node_a *avl)
 
 void printMeasurments(measurements values[])
 {
-for(int i=0; i<1405; i++)
-{
+    for(int i=0; i<1405; i++)
+    {
 
-printf("%s %.2f %.2f %.2f ",values[i].date,values[i].temp,values[i].phosphate,values[i].silicate);
-printf("%.2f %.2f %.2f %.2f\n",values[i].nitrite,values[i].nitrate,values[i].salinity,values[i].oxygen);
-}
+    printf("%s %.2f %.2f %.2f ",values[i].date,values[i].temp,values[i].phosphate,values[i].silicate);
+    printf("%.2f %.2f %.2f %.2f\n",values[i].nitrite,values[i].nitrate,values[i].salinity,values[i].oxygen);
+    }
 }

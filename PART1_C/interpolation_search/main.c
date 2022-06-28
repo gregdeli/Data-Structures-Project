@@ -255,7 +255,7 @@ int main()
             printf("Exit: 2\n");
             printf("Enter your choice: ");
             scanf("%d", &choice);
-            while ((getchar()) != '\n');//reads input buffer until the end and discards them including newline
+            while ((getchar()) != '\n');//reads input buffer until the end and discards them including newline.
             if((choice != 1)&(choice != 2))
             {
                 clear_console();
@@ -264,7 +264,7 @@ int main()
             switch(choice)
             {
                 case 1:
-                    clear_console(); //works only on windows
+                    clear_console();
                     continue;
                 case 2:
                     printf("Exiting...");
@@ -307,7 +307,7 @@ int main()
 
             case 4:
                 loop = true;
-                clear_console(); //works only on windows
+                clear_console();
                 continue;
             case 5:
                 printf("Exiting...\n");

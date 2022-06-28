@@ -109,7 +109,7 @@ void swap(measurements values[],int x,int y)
     values[y]=temp;
 }
 
-void Maximum_ordered_sort(measurements values[],int size)
+void Ordered_maximum_sort(measurements values[],int size)
 {
     int max_position=0;
 
@@ -194,7 +194,7 @@ void Heap_sort(measurements values[],int size)
         Heapify(values, i, 0);
     }
 
-    Maximum_ordered_sort(values,size);
+    Ordered_maximum_sort(values,size);
 }
 
 void Counting_sort(measurements values[],int size)
@@ -256,7 +256,7 @@ void Counting_sort(measurements values[],int size)
         values[i]=result_array[i];
     }
 
-    Maximum_ordered_sort(values,size);
+    Ordered_maximum_sort(values,size);
 }
 
 int main()
