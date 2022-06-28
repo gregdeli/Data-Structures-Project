@@ -201,10 +201,11 @@ int main()
         printf("New date: 4\n");
         printf("Exit: 5\n");
         printf("Enter your choice: ");
-        scanf(" %d", &choice);
+        scanf("%d", &choice);
         while ((getchar()) != '\n');
         if((choice != 1) & (choice != 2) & (choice != 3) & (choice != 4) & (choice != 5))
         {
+            loop = true;
             clear_console();
             continue;
         }

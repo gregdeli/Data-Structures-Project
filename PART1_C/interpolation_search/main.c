@@ -285,6 +285,7 @@ int main()
         while ((getchar()) != '\n');
         if((choice != 1) & (choice != 2) & (choice != 3) & (choice != 4) & (choice != 5))
         {
+            loop = true;
             clear_console();
             continue;
         }
